@@ -1,0 +1,89 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %}Poem{% endblock %}
+{% block pageContent %}
+
+<form action="/search">
+    <input name="query" placeholder="Search for a poem!" style="width: 55%; padding-left:5px;">
+    <input type="submit" value="Search" style="width: 30%;background-color: #ffffff;color: #05084a;border: 1px solid #05084a;">
+</form>
+{% if pRows|length == 0 and qString %}
+    <div class="empty-message">
+        <strong>No results.  Try again!</strong>
+    </div>
+{% else %}
+    {% for pRow in pRows %}
+        <div class="index-poem-row">
+           {% for uRow in userRows %}
+            <!-- Because of the crunch time, I didn't have a great way to upload profile photos and link them
+                 to user accounts, so instead I hard-coded some stock pictures in.  Don't judge me. -->
+            {% if ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Andy Dwyer")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/andydwyer.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Cece Parker")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/ceceparker.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Coach")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/coach.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Jessica Day")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/jessicaday.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Nick Miller")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/nickmiller.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Ron Swanson")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/ronswanson.PNG">
+                    </a>
+                </div>
+            {% elif ((pRow.uniqueUserID == uRow.uniqueUserID) and (uRow.nickname == "Schmidt")) %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/schmidt.PNG">
+                    </a>
+                </div>
+            {% elif pRow.uniqueUserID == uRow.uniqueUserID %}
+                <div class="index-picture">
+                    <a href="/user/{{ uRow.key.id() }}">
+                        <img src="/img/stockprofilepic.png">
+                    </a>
+                </div>
+            {% endif %}
+          {% endfor %}
+
+          <a class="index-poem-title" href="/poem/{{ pRow.key.id() }}">
+              <div>
+                  <strong> {% if pRow.nickname %} {{ pRow.nickname }} {% else %} No Name {% endif %} </strong>
+              </div>
+          </a>
+          {% for uRow in userRows %}
+            {% if pRow.uniqueUserID == uRow.uniqueUserID %}
+              <a class="index-poem-author" href="/user/{{ uRow.key.id() }}">
+                  <div>
+                      {{ uRow.nickname }}<br> <!-- writer name -->
+                  </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

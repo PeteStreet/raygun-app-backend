@@ -1,0 +1,27 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %}Profile{% endblock %}
+{% block pageContent %}
+<!-- uRow: [id, uniqueUserID, nickname, bio, createdAt]
+     userPoems: [id, uniqueUserID, nickname]
+-->
+<!-- <a href="/">go home</a><br><br> -->
+
+<h3>My Profile</h3>
+<strong>Username: </strong> {{ uRow.nickname|e }}<br>
+<strong>Age: </strong> {{ uRow.age|e }}<br>
+<strong>Bio: </strong> {{ uRow.bio|e }}<br>
+<strong>Member since: </strong> {{ uRow.createdAt|e }}<br>
+<br>
+
+<h3>Poems written by me: </h3>
+{% for pRow in userPoems %}
+  <a href="/poem/{{ pRow.key.id() }}">
+      <strong> {{ pRow.nickname }}</strong>
+  </a>
+  <br>
+{% endfor %}
+
+<hr>
+
+{% endblock %}

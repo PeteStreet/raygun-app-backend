@@ -1,0 +1,42 @@
+{% extends "html/base.html" %}
+{% block head %}
+    <link href="/css/main.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Poem{% endblock %}
+{% block pageContent %}
+
+  <div class="comments-page">
+
+    <div class="add-comment" style="position: fixed; height: 70px; background-color: #ffffff;">
+        <form action="/addComment" method="POST">
+          <br><input name="comment_text" style="width: 55%;" placeholder="Write a comment" required>
+          <input name="poem_id" value="{{ pRow.key.id() }}" readonly style="visibility: hidden; width: 0%;">
+             <span class="action-button comment-button">
+                 <input type="submit" value="Add Comment"
+                        style="width: 30%;background-color: #ffffff;color: #05084a;border: 1px solid #05084a;">
+             </span>
+        </form>
+        <hr>
+    </div>
+
+    <div class="comment-feed" style="padding-top: 70px;">
+    {% if numComments > 0 %}
+        {% for comment in comments %}
+            <div class="comment-row">
+                <div class="comment-author">
+                    <a href="/user/{{ comment.authorID }}"><strong>{{comment.userNickname}}</strong></a>
+                </div>
+                <div class="comment-text">
+                    <p>{{comment.text}}</p>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+    <br><br>
+
+  </div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %}Poem{% endblock %}
+{% block pageContent %}
+
+<h3>Create a Profile</h3>
+<form action="create-profile" method="POST">
+  Username: <input name="username"><br>
+  <!-- Age: <input name="age" type="number" min="1" max="100"><br>
+  Bio:<br><textarea name="user_bio" rows="5" cols="60"></textarea><br> -->
+  <input type="submit" value="Create User">
+</form>
+<strong>{{error}}</strong>
+{% endblock %}

@@ -1,0 +1,96 @@
+/*account for 5 * ___vw of margins. */
+body {
+  font-family: Roboto, Helvetica, sans-serif;
+  margin: 0px; }
+  body a {
+    color: black;
+    text-decoration: none; }
+    body a :active {
+      color: black; }
+    body a :hover {
+      color: black; }
+    body a :visited {
+      color: black; }
+
+.slogan-row .slogan-author {
+  font-size: 3.75vw;
+  float: left; }
+.slogan-row .slogan-text {
+  font-size: 10vw;
+  font-weight: bold;
+  margin: 0px 0px;
+  float: left;
+  clear: left; }
+.slogan-row .slogan-data {
+  font-size: 2vw;
+  float: left;
+  clear: both; }
+.slogan-row .slogan-listing-link {
+  width: 75vw;
+  margin-left: 3vw; }
+.slogan-row hr {
+  width: 100%;
+  float: left; }
+.slogan-row .slogan-vote-buttons {
+  width: 20vw;
+  margin: 0vw 1vw;
+  float: right;
+  clear: left;
+  text-align: center; }
+  .slogan-row .slogan-vote-buttons div {
+    font-size: 15vw;
+    margin-bottom: -.8em; }
+
+.slogan-page {
+  padding: 0vw 2vw; }
+  .slogan-page .slogan-author {
+    font-size: 3.75vw;
+    float: left; }
+  .slogan-page .slogan-text-box {
+    border: solid 1px black;
+    padding: 5vw 1vw;
+    overflow: hidden;
+    float: left; }
+  .slogan-page .slogan-text {
+    width: 70vw;
+    font-size: 8vw;
+    font-weight: bold;
+    margin: 0px 0px;
+    float: left;
+    clear: left; }
+  .slogan-page .slogan-vote-buttons {
+    width: 20vw;
+    margin: 0vw 1vw;
+    float: right;
+    clear: left; }
+    .slogan-page .slogan-vote-buttons div {
+      font-size: 7vw; }
+      .slogan-page .slogan-vote-buttons div .arrow {
+        position: relative;
+        top: .25em; }
+  .slogan-page .slogan-data {
+    font-size: 2.5vw;
+    float: right; }
+  .slogan-page .slogan-tags {
+    float: left;
+    font-size: 3vw; }
+  .slogan-page .slogan-comments {
+    clear: both;
+    font-size: 2.5vw;
+    position: relative;
+    top: 3vw; }
+    .slogan-page .slogan-comments .comment-author {
+      font-weight: bold;
+      margin-bottom: 0px; }
+    .slogan-page .slogan-comments .comment-text {
+      margin-top: 0px; }
+  .slogan-page .slogan-comment-buttons {
+    padding-top: 2vw; }
+    .slogan-page .slogan-comment-buttons button {
+      margin-right: 3vw;
+      font-size: 3vw;
+      padding: 1vw;
+      background-color: #ffffff;
+      border: solid 1px black; }
+
+/*# sourceMappingURL=main.css.map */

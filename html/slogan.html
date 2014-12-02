@@ -1,0 +1,47 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %}Slogan{% endblock %}
+{% block pageContent %}
+
+<!-- pRow, author, comments -->
+<!-- <a href="/">go home</a><br><br> -->
+
+<div class="slogan-page">
+
+    <p class="slogan-author">{{sRow.authorNickname}}</p>
+    <div class="slogan-text-box">
+        <div class="slogan-vote-buttons">
+            <div class="upvote">
+                <span class="arrow">ˆ</span> {{sRow.numLikes}}
+            </div>
+            <div class="downvote">
+                <span class="arrow">ˇ</span> {{sRow.numDislikes}}
+            </div>
+        </div>
+        <p class="slogan-text">{{sRow.text}}</p>
+    </div>
+    <span class="slogan-tags">#Midwest</span>
+    <span class="slogan-data">{{sRow.numComments}} comments</span>
+    <div class="slogan-comments">
+        <!-- these comments are placeholder until I can pull actual comments from the datastore. -->
+        <p class="comment-author">
+            Commenter Name
+        </p>
+        <p class="comment-text">
+            Cool Slogan, dude!
+        </p>
+        <p class="comment-author">
+            Another Commenter
+        </p>
+        <p class="comment-text">
+            Nice one.
+        </p>
+    </div>
+    <div class="slogan-comment-buttons">
+        <button>Comment</button> <button>Share</button>
+    </div>
+    <p></p>
+
+</div>
+
+{% endblock %}

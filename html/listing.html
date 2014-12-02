@@ -1,0 +1,31 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %}SloGun{% endblock %}
+{% block pageContent %}
+
+<div class="listing-page">
+    {% for sRow in sloganRows %}
+        <div class="slogan-row">
+            <div class="slogan-vote-buttons">
+                <div class="upvote">
+                    ˆ
+                </div>
+                <div class="downvote">
+                    ˇ
+                </div>
+            </div>
+            <a href="/slogan/{{sRow.key.id()}}">
+                <div class="slogan-listing-link">
+                    <p class="slogan-author">{{sRow.authorNickname}}</p>
+                    <p class="slogan-text">{{sRow.text}}</p>
+                    <p class="slogan-data">{{sRow.numComments}} comments</p>
+                </div>
+            </a>
+            <hr>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

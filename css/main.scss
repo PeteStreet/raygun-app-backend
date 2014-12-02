@@ -1,0 +1,129 @@
+$fontfam: Roboto, Helvetica, sans-serif;
+$sloganListingLinkWidth: 75vw;
+$sloganListingVoteButtonsWidth: 20vw; /*account for 5 * ___vw of margins. */
+$sloganPageTextWidth: 70vw;
+$sloganPageVoteButtonsWidth: 20vw;
+$defaultColor: black;
+
+body {
+  font-family: $fontfam;
+  margin: 0px;
+
+  a {
+    color: $defaultColor;
+    text-decoration: none;
+    :active {
+      color: $defaultColor;
+    }
+    :hover {
+      color: $defaultColor;
+    }
+    :visited {
+      color: $defaultColor;
+    }
+  }
+}
+
+.slogan-row {
+  .slogan-author {
+    font-size: 3.75vw;
+    float: left;
+  }
+  .slogan-text {
+    font-size: 10vw;
+    font-weight: bold;
+    margin: 0px 0px;
+    float: left;
+    clear: left;
+  }
+  .slogan-data {
+    font-size: 2vw;
+    float: left;
+    clear: both;
+  }
+  .slogan-listing-link {
+    width: $sloganListingLinkWidth;
+    margin-left: 3vw;
+  }
+  hr {
+    width: 100%;
+    float: left;
+  }
+  .slogan-vote-buttons {
+    width: $sloganListingVoteButtonsWidth;
+    margin: 0vw 1vw;
+    float: right;
+    clear: left;
+    text-align: center;
+    div {
+      font-size: 15vw;
+      margin-bottom: -.8em;
+    }
+  }
+}
+
+.slogan-page {
+  padding: 0vw 2vw;
+  .slogan-author {
+    font-size: 3.75vw;
+    float: left;
+  }
+  .slogan-text-box {
+    border: solid 1px black;
+    padding: 5vw 1vw;
+    overflow: hidden;
+    float: left
+  }
+  .slogan-text {
+    width: $sloganPageTextWidth;
+    font-size: 8vw;
+    font-weight: bold;
+    margin: 0px 0px;
+    float: left;
+    clear: left;
+  }
+  .slogan-vote-buttons {
+    width: $sloganPageVoteButtonsWidth;
+    margin: 0vw 1vw;
+    float: right;
+    clear: left;
+    div {
+      font-size: 7vw;
+      .arrow {
+        position: relative;
+        top: .25em;
+      }
+    }
+  }
+  .slogan-data {
+    font-size: 2.5vw;
+    float: right;
+  }
+  .slogan-tags {
+    float: left;
+    font-size: 3vw;
+  }
+  .slogan-comments {
+    clear: both;
+    font-size: 2.5vw;
+    position: relative;
+    top: 3vw;
+    .comment-author {
+      font-weight: bold;
+      margin-bottom: 0px;
+    }
+    .comment-text {
+      margin-top: 0px;
+    }
+  }
+  .slogan-comment-buttons {
+    padding-top: 2vw;
+    button {
+      margin-right: 3vw;
+      font-size: 3vw;
+      padding: 1vw;
+      background-color: #ffffff;
+      border: solid 1px $defaultColor;
+    }
+  }
+}
