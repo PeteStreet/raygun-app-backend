@@ -1,7 +1,8 @@
 /*account for 5 * ___vw of margins. */
 body {
   font-family: Roboto, Helvetica, sans-serif;
-  margin: 0px; }
+  margin: 0px;
+  width: 98%; }
   body a {
     color: black;
     text-decoration: none; }
@@ -48,7 +49,7 @@ body {
     float: left; }
   .slogan-page .slogan-text-box {
     border: solid 1px black;
-    padding: 5vw 1vw;
+    padding: 5vw 0vw;
     overflow: hidden;
     float: left; }
   .slogan-page .slogan-text {
@@ -85,12 +86,21 @@ body {
     .slogan-page .slogan-comments .comment-text {
       margin-top: 0px; }
   .slogan-page .slogan-comment-buttons {
-    padding-top: 2vw; }
-    .slogan-page .slogan-comment-buttons button {
-      margin-right: 3vw;
-      font-size: 3vw;
-      padding: 1vw;
-      background-color: #ffffff;
-      border: solid 1px black; }
+    padding: 2vw;
+    border: solid 1px black;
+    font-size: 3vw;
+    position: fixed;
+    bottom: .5rem; }
+
+.profile-page .profile-info {
+  float: right;
+  padding: 10px; }
+
+.comment-feed .add-comment {
+  padding-left: 2rem;
+  padding-right: 1rem; }
+.comment-feed .comment-row {
+  padding-left: 2rem;
+  padding-right: 1rem; }
 
 /*# sourceMappingURL=main.css.map */

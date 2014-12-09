@@ -8,7 +8,11 @@
 
 <div class="slogan-page">
 
-    <p class="slogan-author">{{sRow.authorNickname}}</p>
+    <div>
+        <a href="/user/{{sRow.uniqueAuthorID}}">
+            <p class="slogan-author">{{sRow.authorNickname}}</p>
+        </a>
+    </div>
     <div class="slogan-text-box">
         <div class="slogan-vote-buttons">
             <div class="upvote">
@@ -21,25 +25,22 @@
         <p class="slogan-text">{{sRow.text}}</p>
     </div>
     <span class="slogan-tags">#Midwest</span>
-    <span class="slogan-data">{{sRow.numComments}} comments</span>
+    <span class="slogan-data">
+        {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}</span>
     <div class="slogan-comments">
         <!-- these comments are placeholder until I can pull actual comments from the datastore. -->
-        <p class="comment-author">
-            Commenter Name
-        </p>
-        <p class="comment-text">
-            Cool Slogan, dude!
-        </p>
-        <p class="comment-author">
-            Another Commenter
-        </p>
-        <p class="comment-text">
-            Nice one.
-        </p>
+        {% for cRow in comments %}
+            <p class="comment-author">
+                {{cRow.userNickname}}
+            </p>
+            <p class="comment-text">
+                {{cRow.text}}
+            </p>
+        {% endfor %}
     </div>
-    <div class="slogan-comment-buttons">
-        <button>Comment</button> <button>Share</button>
-    </div>
+    <a class="slogan-comment-buttons" style="left:1rem;" href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/comments">Comment</a>
+    <a class="slogan-comment-buttons" style="right:1rem;" href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/share">Share</a>
+
     <p></p>
 
 </div>

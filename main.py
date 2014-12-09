@@ -98,8 +98,35 @@ class SearchHandler(Handler):
 
 class ProfileHandler(Handler):
     def get(self, profile_id):
-        asdf = 2
         #general method for displaying a user profile
+        userRows = models.user.gql('')
+        userSloganRows = []
+        userExists = False
+        isCurrentUser = False
+
+        for uRow in userRows:
+            if uRow.key.id() == int(profile_id): # The specific user's profile
+                userExists = True
+                if uRow.uniqueGivenID == users.get_current_user().user_id():
+                    isCurrentUser = True
+
+                sloganRows = models.slogan.gql('ORDER BY createdAt DESC')
+                for sRow in sloganRows:
+                    if sRow.uniqueAuthorID == uRow.key.id(): # If the user wrote this slogan
+                        userSloganRows.append(sRow)
+
+                template = jinja2_env.get_template('html/profile.html')
+                template_values = {"uRow": uRow, "sloganRows": userSloganRows, "isCurrentUser": isCurrentUser}
+                self.response.out.write(template.render(template_values))
+                break
+
+        if not userExists:
+            #self.response.out.write("Create yourself a profile")
+            self.redirect("/create-profile")
+
+
+
+
         '''userRows = models.user.gql('').fetch()
         poemRows = poem.gql('ORDER BY createdAt DESC').fetch()
         followRows = follow.gql('').fetch()
@@ -181,7 +208,18 @@ class SloganHandler(Handler):
         sloganExists = False
         for sRow in sloganRows:
             if sRow.key.id() == int(slogan_id):
-                template_values = {"sRow": sRow}
+                commentRows = models.comment.gql('ORDER BY createdAt DESC')
+                comments = []
+                commentCounter = 0 #this limits how many comments are shown on the slogan page.
+                for cRow in commentRows:
+                    if cRow.uniqueSloganID == int(slogan_id) and commentCounter < 2:
+                        comments.append(cRow)
+                        commentCounter += 1
+                    elif commentCounter >= 2:
+                        break
+
+
+                template_values = {"sRow": sRow, "comments": comments}
                 template = jinja2_env.get_template('html/slogan.html')
                 self.response.out.write(template.render(template_values))
                 sloganExists = True
@@ -192,44 +230,49 @@ class SloganHandler(Handler):
 
 
 class SloganCommentsHandler(Handler):
-    def get(self, poem_id):
-        asdf = 5
-        '''poemRows = poem.gql('').fetch()
-        commentRows = comment.gql('ORDER BY createdAt DESC').fetch()
-        for pRow in poemRows:
-            if pRow.key.id() == int(poem_id):
-                #find out which comments belong to this poem
-                comments = []
-                numComments = 0
-                for c in commentRows:
-                    if c.uniquePoemID == pRow.key.id():
-                        comments.append(c)
-                        numComments += 1
-                template_values = {"comments": comments, "numComments": numComments, "pRow": pRow}
+    def get(self, slogan_id):
+        commentRows = models.comment.gql('ORDER BY createdAt DESC')
+        comments = []
+        for cRow in commentRows:
+            if cRow.uniqueSloganID == int(slogan_id): # If the comments belong to this particular slogan
+                comments.append(cRow)
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(slogan_id):
+                template_values = {"comments": comments, "sRow": sRow}
                 template = jinja2_env.get_template('html/comments.html')
                 self.response.out.write(template.render(template_values))
+                break
 
     def post(self):
         #first, collect data to be placed into the comment entity
         commentText = self.request.get("comment_text")
-        uniquePoemID = self.request.get("poem_id")
-        userRows = user.gql('').fetch()
+        uniqueSloganID = self.request.get("slogan_id")
+
+        userRows = models.user.gql('').fetch()
         currentUser = users.get_current_user().user_id()
         userNickname = ""
-        commentAuthorID = ""
-
+        commentAuthorID = 0
         for uRow in userRows:
-            if uRow.uniqueUserID == currentUser:
+            if uRow.uniqueGivenID == currentUser:
                 userNickname = uRow.nickname
-                commentAuthorID = str(uRow.key.id())
+                commentAuthorID = uRow.key.id()
+                uRow.slogarma += 5 #increment the user's "slogarma" on comments, likes, and posts.
+
+        #increment "numComments" for the slogan.
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(uniqueSloganID):
+                sRow.numComments += 1
+                sRow.put()
 
         #create a new comment entity.
-        if commentText: #this should always be true from the "required" html form attribute.
-            c = comment(uniqueUserID = currentUser, authorID = commentAuthorID, userNickname = userNickname,
-                        uniquePoemID = int(uniquePoemID), text = commentText)
-            c.put()
+        c = models.comment(uniqueAuthorID = commentAuthorID, uniqueSloganID = int(uniqueSloganID),
+                           userNickname = userNickname, text = commentText)
+        c.put()
 
-        self.redirect("/poem/" + uniquePoemID + "/comments") #this needs to take us back to the original poem page.'''
+        self.redirect("/slogan/" + uniqueSloganID + "/comments")
 
 
 class AddSloganHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
@@ -247,52 +290,44 @@ class AddSloganHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
             if users.get_current_user():
                 currentUser = users.get_current_user().user_id()
 
-                if sloganText:
-                    s = models.slogan(uniqueAuthorID = 1, authorNickname = "John Doe",
-                                      numComments = 5, numLikes = 14, numDislikes = 3, text = sloganText)
-                    sloganID = s.put().id() #put the slogan in the datastore
-                    #send us back to the poem page, and from there we can poll for recordings.
+                userRows = models.user.gql('')
+                for uRow in userRows:
+                    if uRow.uniqueGivenID == currentUser:
+                        if sloganText:
+                            s = models.slogan(uniqueAuthorID = uRow.key.id(), authorNickname = uRow.nickname,
+                                              numComments = 0, numLikes = 0, numDislikes = 0, text = sloganText)
+                            sloganID = s.put().id() #put the slogan in the datastore
+                            #send us back to the poem page, and from there we can poll for recordings.
 
-                    #this is a janky way to get around eventual consistency...
-                    time.sleep(.2)
-                    sloganExists = False
-                    for x in range(0, 3):
-                        sloganRows = models.slogan.gql('')
-                        for sRow in sloganRows:
-                            if sRow.key.id() == sloganID:
-                                sloganExists = True
-                                self.redirect('/slogan/%s' % int(sloganID))
-                                break
-                            else:
-                                time.sleep(.2)
-                    if not sloganExists:  #if it's too slow, don't keep on querying the datastore.
-                        self.redirect('/listing/new')
-
-
-
-            #otherwise, if the user isn't signed in and has made it to this page, they must be on the app. take in the manual uniqueUserID attribute
-            else:
-                if sloganText:
-                    s = models.slogan(uniqueAuthorID = 1, text = sloganText)
-                    sloganID = s.put().id() #put the slogan in the datastore
-                    #send us back to the poem page, and from there we can poll for recordings.
-                    self.redirect('/slogan/%s' % int(sloganID))
+                            #this is a janky way to get around the common eventual consistency issue...
+                            time.sleep(.2)
+                            sloganExists = False
+                            for x in range(0, 3):
+                                sloganRows = models.slogan.gql('')
+                                for sRow in sloganRows:
+                                    if sRow.key.id() == sloganID:
+                                        sloganExists = True
+                                        self.redirect('/slogan/%s' % int(sloganID))
+                                        break
+                                    else:
+                                        time.sleep(.2)
+                            if not sloganExists:  #if it's too slow, don't keep on querying the datastore.
+                                self.redirect('/listing/new')
 
 
 
 class CreateProfileHandler(Handler):
     def get(self):
-        asdf = 33
-        '''template = jinja2_env.get_template('html/create-profile.html')
+        template = jinja2_env.get_template('html/create-profile.html')
         self.response.out.write(template.render())
 
     def post(self):
         newUserNickname = self.request.get('username')
-        #userBio = self.request.get('user_bio')
-        #userAge = int(self.request.get('age'))
+        userEmail = self.request.get('email')
+        userBio = self.request.get('user_bio')
 
         #check to see if the userNickname provided is unique
-        userRows = user.gql('').fetch()
+        userRows = models.user.gql('')
         isUniqueUsername = True
         for uRow in userRows:
             if uRow.nickname == newUserNickname:
@@ -301,41 +336,17 @@ class CreateProfileHandler(Handler):
         if isUniqueUsername:
             currentUser = users.get_current_user().user_id()
 
-            u = user(uniqueUserID = currentUser, nickname = newUserNickname)
+            u = models.user(uniqueGivenID = currentUser, nickname = newUserNickname,
+                            email = userEmail, bio = userBio, numSlogans = 0)
             u.put()
 
-            self.redirect("/")
+            self.redirect("/listing/new")
 
         else:
             error = "That username already exists!  Please pick a different one."
             template = jinja2_env.get_template('html/create-profile.html')
             template_values = {"error": error}
-            self.response.out.write(template.render(template_values))'''
-
-
-class AddCommentHandler(Handler):
-    def post(self):
-        asdf = 9
-        '''#first, collect data to be placed into the comment entity
-        commentText = self.request.get("comment_text")
-        uniquePoemID = self.request.get("poem_id")
-        userRows = user.gql('').fetch()
-        currentUser = users.get_current_user().user_id()
-        userNickname = ""
-        commentAuthorID = ""
-
-        for uRow in userRows:
-            if uRow.uniqueUserID == currentUser:
-                userNickname = uRow.nickname
-                commentAuthorID = str(uRow.key.id())
-
-        #create a new comment entity.
-        if commentText: #this should always be true from the "required" html form attribute.
-            c = comment(uniqueUserID = currentUser, authorID = commentAuthorID, userNickname = userNickname,
-                        uniquePoemID = int(uniquePoemID), text = commentText)
-            c.put()
-
-        self.redirect("/poem/" + uniquePoemID + "/comments") #this needs to take us back to the original poem page.'''
+            self.response.out.write(template.render(template_values))
 
 
 class DeleteSloganHandler(Handler):
@@ -350,8 +361,6 @@ class DeleteSloganHandler(Handler):
                 pRow.key.delete() #remove the 'poem' entity
 
         self.redirect("/my-profile")'''
-
-
 
 
 def handle_404(request, response, exception):
@@ -383,8 +392,9 @@ application = webapp2.WSGIApplication([
     ("/my-profile", MyProfileHandler),
     ("/create-profile", CreateProfileHandler),
     ("/slogan/(\d+)", SloganHandler),
+    ("/slogan/(\d+)/share", SloganHandler),
     ("/slogan/(\d+)/comments", SloganCommentsHandler),
-    ("/addComment", AddCommentHandler),
+    ("/addComment", SloganCommentsHandler),
     ("/addSlogan", AddSloganHandler),
     ("/deleteSlogan", DeleteSloganHandler),
 ], debug=True)

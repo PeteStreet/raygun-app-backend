@@ -14,9 +14,11 @@
                     ˇ
                 </div>
             </div>
+            <a href="/user/{{sRow.uniqueAuthorID}}">
+                <p class="slogan-author">{{sRow.authorNickname}}</p>
+            </a>
             <a href="/slogan/{{sRow.key.id()}}">
                 <div class="slogan-listing-link">
-                    <p class="slogan-author">{{sRow.authorNickname}}</p>
                     <p class="slogan-text">{{sRow.text}}</p>
                     <p class="slogan-data">{{sRow.numComments}} comments</p>
                 </div>

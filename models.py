@@ -7,7 +7,9 @@ class user(ndb.Model):
     nickname = ndb.StringProperty()
     picture = ndb.BlobProperty()
     numSlogans = ndb.IntegerProperty()
+    email = ndb.StringProperty()
     bio = ndb.TextProperty()
+    slogarma = ndb.IntegerProperty()
     createdAt = ndb.DateTimeProperty(auto_now_add=True)
 
 class slogan(ndb.Model):

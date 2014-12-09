@@ -8,6 +8,32 @@
 <!-- <a href="/">go home</a><br><br> -->
 
 <div class="profile-page">
+    <img src="/img/stock-profile.PNG" class="profile-picture">
+    <div class="profile-info">
+        <h3>{{uRow.nickname}}</h3>
+        <p class="profile-bio">{{uRow.bio}}</p>
+    </div>
+
+    {% for sRow in sloganRows %}
+    <hr>
+        <div class="slogan-row">
+            <div class="slogan-vote-buttons">
+                <div class="upvote">
+                    ˆ
+                </div>
+                <div class="downvote">
+                    ˇ
+                </div>
+            </div>
+            <a href="/slogan/{{sRow.key.id()}}">
+                <div class="slogan-listing-link">
+                    <p class="slogan-text">{{sRow.text}}</p>
+                    <p class="slogan-data">{{sRow.numComments}} comments</p>
+                </div>
+            </a>
+            <hr>
+        </div>
+    {% endfor %}
 
 </div>
 
