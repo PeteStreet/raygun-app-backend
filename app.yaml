@@ -22,6 +22,9 @@ handlers:
   script: admin.application
   login: required
 
+- url: /pre-login.*
+  script: prelogin.application
+
 - url: /.*
   script: main.application
   login: required

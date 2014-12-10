@@ -7,12 +7,16 @@
     {% for sRow in sloganRows %}
         <div class="slogan-row">
             <div class="slogan-vote-buttons">
-                <div class="upvote">
-                    ˆ
-                </div>
-                <div class="downvote">
-                    ˇ
-                </div>
+                <form method="POST">
+                    <input name="vote-button" value="up" style="display:none">
+                    <input name="sloganID" value="{{sRow.key.id()}}" style="display:none">
+                    <input type="submit" value="up">
+                </form>
+                <form method="POST">
+                    <input name="vote-button" value="down" style="display:none">
+                    <input name="sloganID" value="{{sRow.key.id()}}" style="display:none">
+                    <input type="submit" value="down">
+                </form>
             </div>
             <a href="/user/{{sRow.uniqueAuthorID}}">
                 <p class="slogan-author">{{sRow.authorNickname}}</p>
@@ -27,6 +31,7 @@
         </div>
 
     {% endfor %}
+
 
 </div>
 

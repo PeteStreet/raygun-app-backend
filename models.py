@@ -24,7 +24,7 @@ class slogan(ndb.Model):
     numLikes = ndb.IntegerProperty()
     numDislikes = ndb.IntegerProperty()
     globalRank = ndb.IntegerProperty()
-    temporalRank = ndb.IntegerProperty()
+    #temporalRank = ndb.IntegerProperty() This is computed in the handler as it's a per-user value, so not needed here.
     createdAt = ndb.DateTimeProperty(auto_now_add=True) #argument automatically sets createdAt to the current time.
 
 class comment(ndb.Model):

@@ -41,14 +41,51 @@ class HomeListingNewHandler(Handler):
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
+    def post(self):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/new')
+
+
 class HomeListingTrendingHandler(Handler):
     def get(self):
         # get the 30 top trending slogans globally.
-        sloganRows = models.slogan.gql('ORDER BY temporalRank DESC limit 30').fetch()
+        sloganRows = models.slogan.gql('ORDER BY globalRank DESC limit 30').fetch()
 
         template_values = {"sloganRows": sloganRows, "whichListing": "HOME TRENDING"}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
+
+    def post(self):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/trending')
 
 class HomeListingTopHandler(Handler):
     def get(self):
@@ -58,6 +95,24 @@ class HomeListingTopHandler(Handler):
         template_values = {"sloganRows": sloganRows, "whichListing": "HOME TOP"}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
+
+    def post(self):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/top')
 
 
 class SubpageListingNewHandler(Handler):
@@ -70,15 +125,51 @@ class SubpageListingNewHandler(Handler):
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
+    def post(self, subpage):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/' + subpage + '/new')
+
 class SubpageListingTrendingHandler(Handler):
     def get(self, subpage):
         # get the 30 top trending slogans for a specific subpage
         #sloganRows = models.slogan.gql('WHERE :subpage IN (subpageTag1, subpageTag2) ORDER BY temporalRank LIMIT 30').fetch()
-        sloganRows = models.slogan.gql('ORDER BY temporalRank LIMIT 30').fetch()
+        sloganRows = models.slogan.gql('ORDER BY globalRank LIMIT 30').fetch()
 
         template_values = {"sloganRows": sloganRows, "whichListing": "SUBPAGE " + subpage + " TRENDING"}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
+
+    def post(self, subpage):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/' + subpage + '/trending')
 
 class SubpageListingTopHandler(Handler):
     def get(self, subpage):
@@ -89,6 +180,24 @@ class SubpageListingTopHandler(Handler):
         template_values = {"sloganRows": sloganRows, "whichListing": "SUBPAGE " + subpage + " TOP"}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
+
+    def post(self, subpage):
+        buttonVal = self.request.get('vote-button')
+        sloganID = self.request.get('sloganID')
+
+        sloganRows = models.slogan.gql('')
+        for sRow in sloganRows:
+            if sRow.key.id() == int(sloganID):
+                if buttonVal == "up":
+                    sRow.globalRank += 3
+                    sRow.numLikes += 1
+                    sRow.put()
+                elif buttonVal == "down":
+                    sRow.globalRank += 2
+                    sRow.numDislikes += 1
+                    sRow.put()
+
+        self.redirect('/listing/' + subpage + '/top')
 
 
 class SearchHandler(Handler):
@@ -265,6 +374,7 @@ class SloganCommentsHandler(Handler):
         for sRow in sloganRows:
             if sRow.key.id() == int(uniqueSloganID):
                 sRow.numComments += 1
+                sRow.globalRank += 5
                 sRow.put()
 
         #create a new comment entity.
@@ -294,7 +404,7 @@ class AddSloganHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
                 for uRow in userRows:
                     if uRow.uniqueGivenID == currentUser:
                         if sloganText:
-                            s = models.slogan(uniqueAuthorID = uRow.key.id(), authorNickname = uRow.nickname,
+                            s = models.slogan(uniqueAuthorID = uRow.key.id(), authorNickname = uRow.nickname, globalRank = 0,
                                               numComments = 0, numLikes = 0, numDislikes = 0, text = sloganText)
                             sloganID = s.put().id() #put the slogan in the datastore
                             #send us back to the poem page, and from there we can poll for recordings.
