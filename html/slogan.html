@@ -6,7 +6,7 @@
 <!-- pRow, author, comments -->
 <!-- <a href="/">go home</a><br><br> -->
 
-<div class="slogan-page">
+<div class="slogan-page" xmlns="http://www.w3.org/1999/html">
 
     <div>
         <a href="/user/{{sRow.uniqueAuthorID}}">
@@ -15,18 +15,31 @@
     </div>
     <div class="slogan-text-box">
         <div class="slogan-vote-buttons">
-            <div class="upvote">
-                <span class="arrow">ˆ</span> {{sRow.numLikes}}
-            </div>
-            <div class="downvote">
-                <span class="arrow">ˇ</span> {{sRow.numDislikes}}
-            </div>
+            <div><strong><a class="vote-button" href="javascript:VoteUp('{{sRow.key.id()}}');" >
+                <img style="height: 3.2rem" src="/img/gunUp.png">
+                <span style="font-size: 3.2rem">{{sRow.numLikes}}</span>
+            </a></strong></div>
+            <div><strong><a class="vote-button" href="javascript:VoteDown('{{sRow.key.id()}}');" >
+                <img style="height: 3.2rem" src="/img/gunDown.png">
+                -<span style="font-size: 3.2rem">{{sRow.numDislikes}}</span>
+            </a></strong></div>
         </div>
-        <p class="slogan-text">{{sRow.text}}</p>
+        <p class="slogan-text">
+            {% for sWord in sRow.text.split() %}
+                {% if loop.index0 == sRow.highlightedWord %}
+                    <span class="highlighted-word">{{sWord}}</span>
+                {% else %}
+                    <span>{{sWord}}</span>
+                {% endif %}
+            {% endfor %}
+        </p>
     </div>
     <span class="slogan-tags">#Midwest</span>
-    <span class="slogan-data">
-        {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}</span>
+    <a href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/comments">
+        <span class="slogan-data">
+            {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}
+        </span>
+    </a>
     <div class="slogan-comments">
         <!-- these comments are placeholder until I can pull actual comments from the datastore. -->
         {% for cRow in comments %}

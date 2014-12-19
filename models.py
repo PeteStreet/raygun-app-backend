@@ -5,7 +5,8 @@ from google.appengine.ext import ndb
 class user(ndb.Model):
     uniqueGivenID = ndb.StringProperty() #good for checking isCurrentUser.
     nickname = ndb.StringProperty()
-    picture = ndb.BlobProperty()
+    picture = ndb.BlobKeyProperty()
+    pictureURL = ndb.StringProperty()
     numSlogans = ndb.IntegerProperty()
     email = ndb.StringProperty()
     bio = ndb.TextProperty()
@@ -17,7 +18,7 @@ class slogan(ndb.Model):
     authorNickname = ndb.StringProperty()
     authorThumbnail = ndb.BlobProperty()
     text = ndb.StringProperty(required=True)
-    highlightedSection = ndb.StringProperty()
+    highlightedWord = ndb.IntegerProperty()
     subpageTag1 = ndb.StringProperty()
     subpageTag2 = ndb.StringProperty()
     numComments = ndb.IntegerProperty()

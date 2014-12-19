@@ -2,45 +2,49 @@
 body {
   font-family: Roboto, Helvetica, sans-serif;
   margin: 0px;
-  width: 98%; }
+  width: 98%;
+  overflow-x: hidden; }
   body a {
-    color: black;
+    color: #000000;
     text-decoration: none; }
-    body a :active {
-      color: black; }
-    body a :hover {
-      color: black; }
     body a :visited {
-      color: black; }
+      color: #000000; }
 
-.slogan-row .slogan-author {
-  font-size: 3.75vw;
-  float: left; }
-.slogan-row .slogan-text {
-  font-size: 10vw;
-  font-weight: bold;
-  margin: 0px 0px;
-  float: left;
-  clear: left; }
-.slogan-row .slogan-data {
-  font-size: 2vw;
-  float: left;
-  clear: both; }
-.slogan-row .slogan-listing-link {
-  width: 75vw;
-  margin-left: 3vw; }
-.slogan-row hr {
-  width: 100%;
-  float: left; }
-.slogan-row .slogan-vote-buttons {
-  width: 20vw;
-  margin: 0vw 1vw;
-  float: right;
-  clear: left;
-  text-align: center; }
-  .slogan-row .slogan-vote-buttons div {
-    font-size: 15vw;
-    margin-bottom: -.8em; }
+.slogan-row {
+  position: relative;
+  overflow: hidden; }
+  .slogan-row .slogan-author {
+    font-size: 3.75vw;
+    font-weight: bold;
+    margin-left: 3vw;
+    float: left; }
+  .slogan-row .slogan-text {
+    font-size: 10vw;
+    font-weight: bold;
+    margin: 0px 0px;
+    float: left;
+    clear: left; }
+  .slogan-row .slogan-data {
+    font-size: 2vw;
+    float: left;
+    clear: both; }
+  .slogan-row .slogan-listing-link {
+    width: 75vw;
+    margin-left: 3vw; }
+  .slogan-row hr {
+    width: 100%;
+    float: left; }
+  .slogan-row .slogan-vote-buttons {
+    /* width: $sloganListingVoteButtonsWidth; */
+    margin: 0vw 1vw;
+    float: right;
+    clear: left;
+    text-align: center;
+    position: absolute;
+    right: 1em; }
+    .slogan-row .slogan-vote-buttons div {
+      font-size: 15vw;
+      margin-bottom: -.8em; }
 
 .slogan-page {
   padding: 0vw 2vw; }
@@ -87,13 +91,19 @@ body {
       margin-top: 0px; }
   .slogan-page .slogan-comment-buttons {
     padding: 2vw;
-    border: solid 1px black;
+    border: solid 1px #000000;
     font-size: 3vw;
     position: fixed;
     bottom: .5rem; }
 
+.profile-page .profile-top {
+  height: 25vh; }
+.profile-page .profile-picture {
+  height: 85%;
+  width: auto;
+  float: left;
+  padding: 1.8%; }
 .profile-page .profile-info {
-  float: right;
   padding: 10px; }
 
 .comment-feed .add-comment {
@@ -102,5 +112,10 @@ body {
 .comment-feed .comment-row {
   padding-left: 2rem;
   padding-right: 1rem; }
+
+.highlighted-word {
+  color: #ffffff;
+  background-color: #2f5057;
+  padding: 0em .12em; }
 
 /*# sourceMappingURL=main.css.map */

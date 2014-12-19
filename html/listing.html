@@ -4,34 +4,46 @@
 {% block pageContent %}
 
 <div class="listing-page">
-    {% for sRow in sloganRows %}
-        <div class="slogan-row">
-            <div class="slogan-vote-buttons">
-                <form method="POST">
-                    <input name="vote-button" value="up" style="display:none">
-                    <input name="sloganID" value="{{sRow.key.id()}}" style="display:none">
-                    <input type="submit" value="up">
-                </form>
-                <form method="POST">
-                    <input name="vote-button" value="down" style="display:none">
-                    <input name="sloganID" value="{{sRow.key.id()}}" style="display:none">
-                    <input type="submit" value="down">
-                </form>
-            </div>
-            <a href="/user/{{sRow.uniqueAuthorID}}">
-                <p class="slogan-author">{{sRow.authorNickname}}</p>
-            </a>
-            <a href="/slogan/{{sRow.key.id()}}">
-                <div class="slogan-listing-link">
-                    <p class="slogan-text">{{sRow.text}}</p>
-                    <p class="slogan-data">{{sRow.numComments}} comments</p>
+    {% if sloganRows|length == 0 %}
+        <h3>There are no slogans matching this topic.  Make yours the first!</h3>
+    {% else %}
+        {% for sRow in sloganRows %}
+            <div class="slogan-row">
+                <div class="slogan-vote-buttons">
+                    <div><strong><a class="vote-button" href="javascript:VoteUp('{{sRow.key.id()}}');" >
+                        <img style="height: 3.2rem" src="/img/gunUp.png">
+                        <span style="font-size: 3.2rem">{{sRow.numLikes}}</span>
+                    </a></strong></div>
+                    <div><strong><a class="vote-button" href="javascript:VoteDown('{{sRow.key.id()}}');" >
+                        <img style="height: 3.2rem" src="/img/gunDown.png">
+                        -<span style="font-size: 3.2rem">{{sRow.numDislikes}}</span>
+                    </a></strong></div>
                 </div>
-            </a>
-            <hr>
-        </div>
-
-    {% endfor %}
-
+                <a href="/user/{{sRow.uniqueAuthorID}}" class="slogan-listing-link">
+                    <p class="slogan-author">{{sRow.authorNickname}}</p>
+                </a>
+                <a href="/slogan/{{sRow.key.id()}}">
+                    <div class="slogan-listing-link">
+                        <p class="slogan-text">
+                            {% for sWord in sRow.text.split() %}
+                                {% if loop.index0 == sRow.highlightedWord %}
+                                    <span class="highlighted-word">{{sWord}}</span>
+                                {% else %}
+                                    <span>{{sWord}}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                        <p class="slogan-data">
+                            <a href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/comments">
+                                {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}
+                            </a>
+                        </p>
+                    </div>
+                </a>
+                <hr>
+            </div>
+        {% endfor %}
+    {% endif %}
 
 </div>
 

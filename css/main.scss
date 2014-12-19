@@ -3,22 +3,18 @@ $sloganListingLinkWidth: 75vw;
 $sloganListingVoteButtonsWidth: 20vw; /*account for 5 * ___vw of margins. */
 $sloganPageTextWidth: 70vw;
 $sloganPageVoteButtonsWidth: 20vw;
-$defaultColor: black;
+$defaultColor: #000000;
+$punchColor: #2f5057;
 
 body {
   font-family: $fontfam;
   margin: 0px;
   width: 98%;
+  overflow-x: hidden;
 
   a {
     color: $defaultColor;
     text-decoration: none;
-    :active {
-      color: $defaultColor;
-    }
-    :hover {
-      color: $defaultColor;
-    }
     :visited {
       color: $defaultColor;
     }
@@ -26,8 +22,13 @@ body {
 }
 
 .slogan-row {
+  position: relative;
+  overflow: hidden;
+
   .slogan-author {
     font-size: 3.75vw;
+    font-weight: bold;
+    margin-left: 3vw;
     float: left;
   }
   .slogan-text {
@@ -52,11 +53,13 @@ body {
     float: left;
   }
   .slogan-vote-buttons {
-    width: $sloganListingVoteButtonsWidth;
+    /* width: $sloganListingVoteButtonsWidth; */
     margin: 0vw 1vw;
     float: right;
     clear: left;
     text-align: center;
+    position: absolute;
+    right: 1em;
     div {
       font-size: 15vw;
       margin-bottom: -.8em;
@@ -128,8 +131,16 @@ body {
 }
 
 .profile-page {
+  .profile-top {
+    height: 25vh;
+  }
+  .profile-picture {
+    height: 85%;
+    width: auto;
+    float: left;
+    padding: 1.8%;
+  }
   .profile-info {
-    float: right;
     padding:  10px;
   }
 }
@@ -143,4 +154,10 @@ body {
     padding-left: 2rem;
     padding-right: 1rem;
   }
+}
+
+.highlighted-word {
+  color: #ffffff;
+  background-color: $punchColor;
+  padding: 0em .12em;
 }

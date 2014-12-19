@@ -4,10 +4,11 @@
 {% block pageContent %}
 
 <h3>Create a Profile</h3>
-<form action="create-profile" method="POST">
+<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
   Username: <input name="username" required><br>
   Email Address: <input name="email" required><br>
   Bio:<br><textarea name="user_bio" rows="5" cols="60"></textarea><br>
+  <input type="file" name="pic" accept="image/*">
   <input type="submit" value="Create User">
 </form>
 <strong>{{error}}</strong>

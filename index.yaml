@@ -1,0 +1,33 @@
+indexes:
+
+- kind: comment
+  properties:
+  - name: uniqueSloganID
+  - name: createdAt
+    direction: desc
+
+- kind: slogan
+  properties:
+  - name: subpageTag1
+  - name: createdAt
+
+- kind: slogan
+  properties:
+  - name: subpageTag2
+  - name: createdAt
+
+- kind: slogan
+  properties:
+  - name: subpageTag1
+  - name: globalRank
+
+- kind: slogan
+  properties:
+  - name: subpageTag2
+  - name: globalRank
+
+- kind: slogan
+  properties:
+  - name: uniqueAuthorID
+  - name: createdAt
+    direction: desc
