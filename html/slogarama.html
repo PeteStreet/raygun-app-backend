@@ -2,15 +2,58 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width" />
+
+    <title>SloGun | Slogarama</title>
+
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script src="/js/jquery.textfill.min.js"></script>
+
     <style>
-        body {background-color: #aaaaaa;
-              background: url("/img/Backround-01.png") no-repeat center center fixed;
-              background-size: cover;}
+        body {/*background-color: #aaaaaa;*/
+              background: url("/img/Backround-01.png") no-repeat center top fixed;
+              background-size: cover;
+              font-family: Roboto, Helvetica, sans-serif;}
+        #slogarama-box {
+            width: 50%;
+            margin-left: 25%;
+            margin-top: 30vh;
+            padding: 2.5em 0em;
+            height: auto;
+            background-color: #ffffff;
+            border: 2px solid #2f5057;
+        }
+        #slogarama-points {
+            width: 80%;
+            margin-left: 10%;
+            margin-bottom: 0em;
+            text-align: center;
+        }
+        #slogarama-points span {
+            font-size: 3.5em;
+            font-weight: bold;
+        }
+        #slogarama-text {
+            text-align: center;
+            font-size: .75em;
+        }
 
     </style>
 </head>
 <body>
-Points: {{slogaramaPoints}}
+    <!-- <img src="/img/background02.png"> -->
+    <div id="slogarama-box">
+        <p id="slogarama-points">
+            <span>{{slogaramaPoints}}</span>
+        </p>
+        <p id="slogarama-text">
+            SLOGARAMA
+        </p>
+    </div>
+
+<script>
+    $("#slogarama-points").textfill({});
+    $("#slogarama-text").textfill({});
+</script>
 </body>
 </html>

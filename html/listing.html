@@ -1,29 +1,52 @@
 {% extends "html/base.html" %}
 {% block head %} {% endblock %}
-{% block title %}SloGun{% endblock %}
+{% block title %}{% endblock %}
 {% block pageContent %}
 
 <div class="listing-page">
     {% if sloganRows|length == 0 %}
-        <h3>There are no slogans matching this topic.  Make yours the first!</h3>
+        <h3 class="error-notice">There are no slogans matching this topic.  Make yours the first!</h3>
     {% else %}
         {% for sRow in sloganRows %}
             <div class="slogan-row">
-                <div class="slogan-vote-buttons">
-                    <div><strong><a class="vote-button" href="javascript:VoteUp('{{sRow.key.id()}}');" >
-                        <img style="height: 3.2rem" src="/img/gunUp.png">
-                        <span style="font-size: 3.2rem">{{sRow.numLikes}}</span>
-                    </a></strong></div>
-                    <div><strong><a class="vote-button" href="javascript:VoteDown('{{sRow.key.id()}}');" >
-                        <img style="height: 3.2rem" src="/img/gunDown.png">
-                        -<span style="font-size: 3.2rem">{{sRow.numDislikes}}</span>
-                    </a></strong></div>
-                </div>
-                <a href="/user/{{sRow.uniqueAuthorID}}" class="slogan-listing-link">
+                {% if userRows[loop.index0].pictureURL %}
+                <img src="{{userRows[loop.index0].pictureURL}}" class="profile-picture">
+                {% else %}
+                <img src="/img/stock-profile.PNG" class="profile-picture">
+                {% endif %}
+                <a href="/app/user/{{sRow.uniqueAuthorID}}" class="slogan-listing-link">
                     <p class="slogan-author">{{sRow.authorNickname}}</p>
                 </a>
-                <a href="/slogan/{{sRow.key.id()}}">
-                    <div class="slogan-listing-link">
+
+                <table cellspacing="0" class="slogan-vote-buttons">
+                    <tr class="vote-up-button">
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <img src="/img/gunUp.png">
+                            </a>
+                        </td>
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <strong><span class="vote-number">{{sRow.numLikes}}</span></strong>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr class="vote-down-button">
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <img src="/img/gunDown.png">
+                            </a>
+                        </td>
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <strong><span>-</span><span class="vote-number">{{sRow.numDislikes}}</span></strong>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="slogan-listing-link">
+                    <a href="/app/slogan/{{sRow.key.id()}}">
                         <p class="slogan-text">
                             {% for sWord in sRow.text.split() %}
                                 {% if loop.index0 == sRow.highlightedWord %}
@@ -33,13 +56,14 @@
                                 {% endif %}
                             {% endfor %}
                         </p>
-                        <p class="slogan-data">
-                            <a href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/comments">
-                                {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}
-                            </a>
-                        </p>
-                    </div>
-                </a>
+                    </a>
+                    <p class="slogan-data">
+                        <a href="http://slogunapp.appspot.com/app/slogan/{{sRow.key.id()}}/comments">
+                            {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}
+                        </a>
+                    </p>
+                </div>
+
                 <hr>
             </div>
         {% endfor %}

@@ -2,38 +2,43 @@
 body {
   font-family: Roboto, Helvetica, sans-serif;
   margin: 0px;
-  width: 98%;
+  width: 100%;
   overflow-x: hidden; }
   body a {
     color: #000000;
     text-decoration: none; }
     body a :visited {
       color: #000000; }
+  body input, body textarea {
+    outline: 0;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent; }
 
 .slogan-row {
   position: relative;
   overflow: hidden; }
+  .slogan-row .profile-picture {
+    float: left;
+    width: 2em;
+    padding: 1em; }
   .slogan-row .slogan-author {
     font-size: 3.75vw;
     font-weight: bold;
-    margin-left: 3vw;
-    float: left; }
-  .slogan-row .slogan-text {
-    font-size: 10vw;
-    font-weight: bold;
-    margin: 0px 0px;
     float: left;
-    clear: left; }
+    margin-top: 1rem; }
   .slogan-row .slogan-data {
     font-size: 2vw;
     float: left;
     clear: both; }
   .slogan-row .slogan-listing-link {
-    width: 75vw;
-    margin-left: 3vw; }
-  .slogan-row hr {
-    width: 100%;
-    float: left; }
+    margin-left: 1em; }
+  .slogan-row .slogan-text {
+    font-size: 10vw;
+    font-weight: bold;
+    margin: 0px 0px;
+    float: left;
+    clear: left;
+    width: 70vw; }
   .slogan-row .slogan-vote-buttons {
     /* width: $sloganListingVoteButtonsWidth; */
     margin: 0vw 1vw;
@@ -41,10 +46,33 @@ body {
     clear: left;
     text-align: center;
     position: absolute;
-    right: 1em; }
-    .slogan-row .slogan-vote-buttons div {
-      font-size: 15vw;
-      margin-bottom: -.8em; }
+    right: 1em;
+    top: 50%;
+    -webkit-transform: translateY(-52%);
+    -moz-transform: translateY(-52%);
+    transform: translateY(-52%); }
+    .slogan-row .slogan-vote-buttons td a {
+      display: block; }
+    .slogan-row .slogan-vote-buttons td span {
+      font-size: 1.4rem; }
+      @media screen and (max-width: 480px) {
+        .slogan-row .slogan-vote-buttons td span {
+          font-size: .9rem; } }
+      @media screen and (min-width: 960px) {
+        .slogan-row .slogan-vote-buttons td span {
+          font-size: 1.75rem; } }
+    .slogan-row .slogan-vote-buttons td img {
+      height: 3.4rem; }
+      @media screen and (max-width: 480px) {
+        .slogan-row .slogan-vote-buttons td img {
+          height: 2.8rem; } }
+      @media screen and (min-width: 960px) {
+        .slogan-row .slogan-vote-buttons td img {
+          height: 4rem; } }
+  .slogan-row hr {
+    width: 96%;
+    float: left;
+    margin-left: 2%; }
 
 .slogan-page {
   padding: 0vw 2vw; }
@@ -53,32 +81,22 @@ body {
     float: left; }
   .slogan-page .slogan-text-box {
     border: solid 1px black;
-    padding: 5vw 0vw;
-    overflow: hidden;
-    float: left; }
-  .slogan-page .slogan-text {
-    width: 70vw;
-    font-size: 8vw;
-    font-weight: bold;
-    margin: 0px 0px;
+    padding: 6em 0vw;
+    position: relative;
     float: left;
-    clear: left; }
-  .slogan-page .slogan-vote-buttons {
-    width: 20vw;
-    margin: 0vw 1vw;
-    float: right;
-    clear: left; }
-    .slogan-page .slogan-vote-buttons div {
-      font-size: 7vw; }
-      .slogan-page .slogan-vote-buttons div .arrow {
-        position: relative;
-        top: .25em; }
+    width: 100%; }
+    .slogan-page .slogan-text-box .slogan-text {
+      width: 66vw;
+      padding-left: 4vw; }
   .slogan-page .slogan-data {
     font-size: 2.5vw;
     float: right; }
   .slogan-page .slogan-tags {
     float: left;
-    font-size: 3vw; }
+    font-size: 3vw;
+    margin-top: .1rem; }
+    .slogan-page .slogan-tags span {
+      padding-right: 1em; }
   .slogan-page .slogan-comments {
     clear: both;
     font-size: 2.5vw;
@@ -93,7 +111,6 @@ body {
     padding: 2vw;
     border: solid 1px #000000;
     font-size: 3vw;
-    position: fixed;
     bottom: .5rem; }
 
 .profile-page .profile-top {
@@ -105,17 +122,93 @@ body {
   padding: 1.8%; }
 .profile-page .profile-info {
   padding: 10px; }
+.profile-page .slogan-row td a {
+  display: block; }
+.profile-page .slogan-row td span {
+  font-size: .95rem; }
+  @media screen and (max-width: 480px) {
+    .profile-page .slogan-row td span {
+      font-size: .65rem; } }
+  @media screen and (min-width: 960px) {
+    .profile-page .slogan-row td span {
+      font-size: 1.2rem; } }
+.profile-page .slogan-row td img {
+  height: 2.8rem; }
+  @media screen and (max-width: 480px) {
+    .profile-page .slogan-row td img {
+      height: 2rem; } }
+  @media screen and (min-width: 960px) {
+    .profile-page .slogan-row td img {
+      height: 3.1rem; } }
 
-.comment-feed .add-comment {
+.comments-page .add-comment {
   padding-left: 2rem;
   padding-right: 1rem; }
-.comment-feed .comment-row {
+.comments-page .comment-row {
   padding-left: 2rem;
   padding-right: 1rem; }
+.comments-page input :focus {
+  border: 1px solid #2f5057;
+  /*this doesn't do anything */ }
+.comments-page #below-comment-add-field {
+  margin-top: .2rem;
+  margin-bottom: 0px; }
+  .comments-page #below-comment-add-field #charNum {
+    font-size: 65%; }
 
 .highlighted-word {
   color: #ffffff;
   background-color: #2f5057;
   padding: 0em .12em; }
+
+.error-notice {
+  padding: 2em;
+  text-align: center; }
+
+#addSloganForm {
+  width: 70%;
+  padding-left: 10%;
+  margin-top: 1em; }
+  #addSloganForm textarea {
+    width: 100%;
+    font-size: 2.3rem;
+    font-weight: bold;
+    padding: 13vh 5%;
+    font-family: Roboto, Helvetica, sans-serif; }
+
+#below-slogan-add-field {
+  margin-top: .2rem;
+  margin-bottom: 0px; }
+  #below-slogan-add-field #charNum {
+    font-size: 65%; }
+
+#edit-profile-page #form-insides, #create-profile-page #form-insides {
+  width: 90%;
+  padding-left: 5%; }
+  #edit-profile-page #form-insides #charNum, #create-profile-page #form-insides #charNum {
+    font-size: 65%; }
+  #edit-profile-page #form-insides #edit-picture-field, #create-profile-page #form-insides #edit-picture-field {
+    width: 30%;
+    float: left; }
+    #edit-profile-page #form-insides #edit-picture-field img, #create-profile-page #form-insides #edit-picture-field img {
+      width: 100%; }
+  #edit-profile-page #form-insides #edit-text-fields, #create-profile-page #form-insides #edit-text-fields {
+    width: 65%;
+    float: right; }
+    #edit-profile-page #form-insides #edit-text-fields input, #edit-profile-page #form-insides #edit-text-fields textarea, #create-profile-page #form-insides #edit-text-fields input, #create-profile-page #form-insides #edit-text-fields textarea {
+      width: 100%; }
+    #edit-profile-page #form-insides #edit-text-fields input:focus, #edit-profile-page #form-insides #edit-text-fields textarea:focus, #create-profile-page #form-insides #edit-text-fields input:focus, #create-profile-page #form-insides #edit-text-fields textarea:focus {
+      border: 2px solid #2f5057; }
+  #edit-profile-page #form-insides #create-edit-fields, #create-profile-page #form-insides #create-edit-fields {
+    width: 100%; }
+    #edit-profile-page #form-insides #create-edit-fields input, #edit-profile-page #form-insides #create-edit-fields textarea, #create-profile-page #form-insides #create-edit-fields input, #create-profile-page #form-insides #create-edit-fields textarea {
+      width: 100%; }
+    #edit-profile-page #form-insides #create-edit-fields input:focus, #edit-profile-page #form-insides #create-edit-fields textarea:focus, #create-profile-page #form-insides #create-edit-fields input:focus, #create-profile-page #form-insides #create-edit-fields textarea:focus {
+      border: 2px solid #2f5057; }
+#edit-profile-page #submit-button, #create-profile-page #submit-button {
+  width: 100%;
+  height: 3.5em;
+  position: fixed;
+  bottom: 0px; }
 
 /*# sourceMappingURL=main.css.map */

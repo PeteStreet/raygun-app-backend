@@ -1,6 +1,6 @@
 {% extends "html/base.html" %}
 {% block head %} {% endblock %}
-{% block title %}Profile{% endblock %}
+{% block title %} | Profile{% endblock %}
 {% block pageContent %}
 <!-- uRow: [id, uniqueUserID, nickname, bio, createdAt]
      userPoems: [id, uniqueUserID, nickname]
@@ -21,38 +21,57 @@
     </div>
     <hr>
     {% for sRow in sloganRows %}
-        <div class="slogan-row">
-            <div class="slogan-vote-buttons">
-                <div><strong><a class="vote-button" href="javascript:VoteUp('{{sRow.key.id()}}');" >
-                    <img style="height: 3.2rem" src="/img/gunUp.png">
-                    <span style="font-size: 3.2rem">{{sRow.numLikes}}</span>
-                </a></strong></div>
-                <div><strong><a class="vote-button" href="javascript:VoteDown('{{sRow.key.id()}}');" >
-                    <img style="height: 3.2rem" src="/img/gunDown.png">
-                    -<span style="font-size: 3.2rem">{{sRow.numDislikes}}</span>
-                </a></strong></div>
-            </div>
-            <a href="/slogan/{{sRow.key.id()}}">
+            <div class="slogan-row">
+
+                <table cellspacing="0" class="slogan-vote-buttons">
+                    <tr class="vote-up-button">
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <img src="/img/gunUp.png">
+                            </a>
+                        </td>
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <strong><span class="vote-number">{{sRow.numLikes}}</span></strong>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr class="vote-down-button">
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <img src="/img/gunDown.png">
+                            </a>
+                        </td>
+                        <td>
+                            <a title="{{sRow.key.id()}}">
+                                <strong><span>-</span><span class="vote-number">{{sRow.numDislikes}}</span></strong>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
                 <div class="slogan-listing-link">
-                    <p class="slogan-text">
-                        {% for sWord in sRow.text.split() %}
-                            {% if loop.index0 == sRow.highlightedWord %}
-                                <span class="highlighted-word">{{sWord}}</span>
-                            {% else %}
-                                <span>{{sWord}}</span>
-                            {% endif %}
-                        {% endfor %}
-                    </p>
+                    <a href="/app/slogan/{{sRow.key.id()}}">
+                        <p class="slogan-text">
+                            {% for sWord in sRow.text.split() %}
+                                {% if loop.index0 == sRow.highlightedWord %}
+                                    <span class="highlighted-word">{{sWord}}</span>
+                                {% else %}
+                                    <span>{{sWord}}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    </a>
                     <p class="slogan-data">
-                        <a href="http://slogunapp.appspot.com/slogan/{{sRow.key.id()}}/comments">
+                        <a href="http://slogunapp.appspot.com/app/slogan/{{sRow.key.id()}}/comments">
                             {% if sRow.numComments == 1 %}{{sRow.numComments}} comment{% else %}{{sRow.numComments}} comments{% endif %}
                         </a>
                     </p>
                 </div>
-            </a>
-            <hr>
-        </div>
-    {% endfor %}
+
+                <hr>
+            </div>
+        {% endfor %}
 
 </div>
 

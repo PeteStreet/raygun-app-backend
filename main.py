@@ -2,6 +2,7 @@ import os
 import logging
 import webapp2
 import time
+import datetime
 from random import randrange
 import json
 
@@ -41,12 +42,18 @@ class Handler(webapp2.RequestHandler):
         self.write(self.render_str(template, **kw))
 
 
+#Dynamic loading for the listing pages is a critical next feature.
 class HomeListingNewHandler(Handler):
     def get(self):
         # get the latest 30 slogans globally.
         sloganRows = models.slogan.gql('ORDER BY createdAt DESC limit 30').fetch()
 
-        template_values = {"sloganRows": sloganRows}
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sloganRows:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
+
+        template_values = {"sloganRows": sloganRows, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
@@ -55,7 +62,19 @@ class HomeListingTrendingHandler(Handler):
         # get the 30 top trending slogans globally.
         sloganRows = models.slogan.gql('ORDER BY globalRank DESC limit 30').fetch()
 
-        template_values = {"sloganRows": sloganRows}
+        currentTime = datetime.datetime.now()
+        for sRow in sloganRows:
+            #put the timediff into some exponential decay function - this needs tweaking!
+            timeDiff = 100000 * 10**(-1 * ((currentTime - sRow.createdAt).total_seconds()) / 100000)
+            sRow.temporalRank = int(timeDiff * sRow.globalRank)
+        sortedSlogans = sorted(sloganRows, key=tempRank, reverse=True)
+
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sortedSlogans:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
+
+        template_values = {"sloganRows": sortedSlogans, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
@@ -64,7 +83,12 @@ class HomeListingTopHandler(Handler):
         # get the 30 all-time top slogans globally.
         sloganRows = models.slogan.gql('ORDER BY globalRank DESC LIMIT 30').fetch()
 
-        template_values = {"sloganRows": sloganRows}
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sloganRows:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
+
+        template_values = {"sloganRows": sloganRows, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
@@ -78,22 +102,36 @@ class SubpageListingNewHandler(Handler):
         sloganRows = sloganRows + sloganRows2
         sortedSlogans = sorted(sloganRows, key=lambda sRow: sRow.createdAt, reverse=True)
 
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sortedSlogans:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
 
-        template_values = {"sloganRows": sortedSlogans}
+        template_values = {"sloganRows": sortedSlogans, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
 class SubpageListingTrendingHandler(Handler):
     def get(self, subpage):
-        # get the 30 top trending slogans for a specific subpage
+        # get the top trending slogans for a specific subpage
         sloganRows = models.slogan.gql('WHERE subpageTag1 = :1 ORDER BY globalRank LIMIT 20', subpage).fetch()
         sloganRows2 = models.slogan.gql('WHERE subpageTag2 = :1 ORDER BY globalRank LIMIT 20', subpage).fetch()
 
         #prior attepts to get the first 30 results matching either tag from GQL failed spectacularly, so instead I'm joining the lists manually.
         sloganRows = sloganRows + sloganRows2
-        sortedSlogans = sorted(sloganRows, key=lambda sRow: sRow.globalRank, reverse=True)
+        currentTime = datetime.datetime.now()
+        for sRow in sloganRows:
+            #put the timediff into some exponential decay function - this needs tweaking!
+            timeDiff = 100000 * 10**(-1 * ((currentTime - sRow.createdAt).total_seconds()) / 100000)
+            sRow.temporalRank = int(timeDiff * sRow.globalRank)
+        sortedSlogans = sorted(sloganRows, key=tempRank, reverse=True)
 
-        template_values = {"sloganRows": sortedSlogans}
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sortedSlogans:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
+
+        template_values = {"sloganRows": sortedSlogans, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
 
@@ -105,11 +143,19 @@ class SubpageListingTopHandler(Handler):
 
         #prior attepts to get the first 30 results matching either tag from GQL failed spectacularly, so instead I'm joining the lists manually.
         sloganRows = sloganRows + sloganRows2
-        sortedSlogans = sorted(sloganRows, key=lambda sRow: sRow.globalRank, reverse=True)
+        sortedSlogans = sorted(sloganRows, key=lambda sRow: sRow.globalRank, reverse=True) #for that descending order
 
-        template_values = {"sloganRows": sortedSlogans}
+        #Attach profile pictures to each slogan in the listing.
+        userRows = []
+        for sRow in sortedSlogans:
+            userRows.append(models.user.get_by_id(sRow.uniqueAuthorID))
+
+        template_values = {"sloganRows": sortedSlogans, "userRows": userRows}
         template = jinja2_env.get_template('html/listing.html')
         self.response.out.write(template.render(template_values))
+
+def tempRank(sortItem): #The lambda function was being prissy, so I'm using this external function to sort temporal ranks instead
+    return sortItem.temporalRank
 
 
 class SearchHandler(Handler):
@@ -142,7 +188,75 @@ class ProfileHandler(Handler):
 
         if not userExists:
             #self.response.out.write("Create yourself a profile")
-            self.redirect("/create-profile")
+            self.redirect("/app/create-profile")
+
+class ProfileEditHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
+    def get(self, profile_id, error=0):
+        #general method for displaying the profile editing form
+        uRow = models.user.get_by_id(int(profile_id))
+
+        upload_url = blobstore.create_upload_url('/app/user/' + profile_id + '/edit')
+
+        errorText = ""
+        if error == "0":
+            errorText = "No Error"
+        elif error == "1":
+            errorText = "That username is already taken!  Pick a different one."
+
+        if uRow:
+            userExists = True
+            if uRow.uniqueGivenID == users.get_current_user().user_id(): #only display the form if it is the current user.
+                template = jinja2_env.get_template('html/edit-profile.html')
+                template_values = {"uRow": uRow, "upload_url": upload_url, "error": errorText}
+                self.response.out.write(template.render(template_values))
+            else:
+                template = jinja2_env.get_template('html/edit-profile-error.html')
+                template_values = {"uRow": uRow}
+                self.response.out.write(template.render(template_values))
+
+
+    def post(self, profile_id):
+        userNickname = self.request.get('username')
+        userBio = self.request.get('user_bio')
+        upload = False
+        if len(self.get_uploads('pic')) > 0:
+            upload = self.get_uploads('pic')[0]
+
+        theUser = models.user.get_by_id(int(profile_id))
+        currentUser = users.get_current_user().user_id()
+
+        #check to see if the userNickname provided is unique
+        userRows = models.user.gql('')
+        isUniqueUsername = True
+        if len(userNickname) > 0:
+            for uRow in userRows:
+                if uRow.nickname == userNickname:
+                    isUniqueUsername = False
+                    break
+
+        if theUser.uniqueGivenID == str(currentUser):
+            for i in range(0,1): #this for loop is sucky, and only exists so I can break out of it on a username clash error.
+                if len(userNickname) > 0:
+                    logging.debug(isUniqueUsername)
+                    if isUniqueUsername:
+                        theUser.nickname = userNickname
+                    else:
+                        self.redirect("/app/user/" + str(profile_id) + "/edit/1")
+                        break #save us from the redirect that happens below
+                if userBio:
+                    theUser.bio = userBio
+                if upload:
+                    theUser.picture = upload.key()
+                    theUser.pictureURL = images.get_serving_url(upload.key())
+                theUser.put()
+                time.sleep(.15) #This helps keep the eventual consistency at bay
+                self.redirect("/app/user/" + str(profile_id))
+
+        else:
+            template = jinja2_env.get_template('html/edit-profile-error.html')
+            template_values = {"uRow": theUser}
+            self.response.out.write(template.render(template_values))
+
 
 
 class MyProfileHandler(Handler):
@@ -155,12 +269,29 @@ class MyProfileHandler(Handler):
         for uRow in userRows:
             if uRow.uniqueGivenID == currentUser:
                 userExists = True
-                redirString = "/user/" + str(uRow.key.id())
+                redirString = "/app/user/" + str(uRow.key.id())
                 self.redirect(redirString)
                 break
 
         if not userExists:
-            self.redirect("/create-profile")
+            self.redirect("/app/create-profile")
+
+class MyProfileEditHandler(Handler):
+    def get(self):
+        #specific method for redirecting to the current user's profile
+        userRows = models.user.gql('')
+        currentUser = users.get_current_user().user_id()
+
+        userExists = False
+        for uRow in userRows:
+            if uRow.uniqueGivenID == currentUser:
+                userExists = True
+                redirString = "/app/user/" + str(uRow.key.id()) + "/edit"
+                self.redirect(redirString)
+                break
+
+        if not userExists:
+            self.redirect("/app/create-profile")
 
 class MyProfileSlogaramaHandler(Handler):
     def get(self):
@@ -172,12 +303,12 @@ class MyProfileSlogaramaHandler(Handler):
         for uRow in userRows:
             if uRow.uniqueGivenID == currentUser:
                 userExists = True
-                redirString = "/user/" + str(uRow.key.id() + "/slogarama")
+                redirString = "/app/user/" + str(uRow.key.id()) + "/slogarama"
                 self.redirect(redirString)
                 break
 
         if not userExists:
-            self.redirect("/create-profile")
+            self.redirect("/app/create-profile")
 
 
 class ProfileSlogansHandler(Handler):
@@ -244,7 +375,7 @@ class SloganCommentsHandler(Handler):
             if uRow.uniqueGivenID == currentUser:
                 userNickname = uRow.nickname
                 commentAuthorID = uRow.key.id()
-                uRow.slogarma += commentPoints
+                uRow.slogarma += commentPoints #add slogarama points for the commenter
                 uRow.put()
 
         #increment "numComments" for the slogan.
@@ -260,7 +391,16 @@ class SloganCommentsHandler(Handler):
                            userNickname = userNickname, text = commentText)
         c.put()
 
-        self.redirect("/slogan/" + uniqueSloganID + "/comments")
+        #add slogarama points for the commentee
+        theSlogan = models.slogan.get_by_id(int(uniqueSloganID))
+        sloganAuthor = models.user.get_by_id(theSlogan.uniqueAuthorID)
+        if sloganAuthor.key.id() != commentAuthorID:
+            sloganAuthor.slogarma += commentPoints
+            sloganAuthor.put()
+
+        time.sleep(.15) #This helps keep the eventual consistency at bay
+
+        self.redirect("/app/slogan/" + uniqueSloganID + "/comments")
 
 
 class AddSloganHandler(Handler):
@@ -279,13 +419,14 @@ class AddSloganHandler(Handler):
                     self.response.out.write(template.render(template_values))
                     break
             if not profileExists:
-                self.redirect('/create-profile')
+                self.redirect('/app/create-profile')
 
     def post(self):
         if True:
             #posting a new slogan
             sloganText = self.request.get('slogan_text')
             manualID = self.request.get('unique_id')
+            checkedBoxes = self.request.get_all('single-check')
 
             currentUser = False
             if users.get_current_user():
@@ -297,30 +438,47 @@ class AddSloganHandler(Handler):
                 for uRow in userRows:
                     if uRow.uniqueGivenID == currentUser:
                         if sloganText:
+                            if len(sloganText) > 65:
+                                sloganText = sloganText[0:65] #truncate the end of the slogan if it's too long.
+
                             #get the number of words in the string and choose one of them at random to highlight.
                             numWords = len(sloganText.split())
                             highlightWord = int(randrange(numWords))
 
+                            tag1 = "null"
+                            tag2 = "null"
+                            if len(checkedBoxes) == 2:
+                                tag1 = checkedBoxes[0]
+                                tag2 = checkedBoxes[1]
+                            elif len(checkedBoxes) == 1:
+                                tag1 = checkedBoxes[0]
+
                             s = models.slogan(uniqueAuthorID = uRow.key.id(), authorNickname = uRow.nickname,
-                                              subpageTag1 = "tag1", subpageTag2 = "tag2",
+                                              subpageTag1 = tag1, subpageTag2 = tag2,
                                               globalRank = 0, highlightedWord = highlightWord,
                                               numComments = 0, numLikes = 0, numDislikes = 0, text = sloganText.upper())
                             sloganID = s.put().id() #put the slogan in the datastore
 
+                            u = models.user.get_by_id(uRow.key.id())
+                            u.slogarma += postPoints
+                            u.put()
+
                             #this is a janky way to get around the common eventual consistency issue...
-                            time.sleep(.2)
+                            time.sleep(.11)
                             sloganExists = False
                             for x in range(0, 3):
                                 sloganRows = models.slogan.gql('')
                                 for sRow in sloganRows:
                                     if sRow.key.id() == sloganID:
                                         sloganExists = True
-                                        self.redirect('/slogan/%s' % int(sloganID))
+                                        self.redirect('/app/slogan/%s' % int(sloganID))
                                         break
                                     else:
-                                        time.sleep(.2)
+                                        time.sleep(.15)
+                                if sloganExists:
+                                    break #break out of the containing loop
                             if not sloganExists:  #if it's too slow, don't keep on querying the datastore.
-                                self.redirect('/listing/new')
+                                self.redirect('/app/listing/new')
             else:
                 for uRow in userRows:
                     if uRow.uniqueGivenID == manualID:
@@ -343,17 +501,17 @@ class AddSloganHandler(Handler):
                                 for sRow in sloganRows:
                                     if sRow.key.id() == sloganID:
                                         sloganExists = True
-                                        self.redirect('/slogan/%s' % int(sloganID))
+                                        self.redirect('/app/slogan/%s' % int(sloganID))
                                         break
                                     else:
                                         time.sleep(.2)
                             if not sloganExists:  #if it's too slow, don't keep on querying the datastore.
-                                self.redirect('/listing/new')
+                                self.redirect('/app/listing/new')
 
 
 class CreateProfileHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
     def get(self):
-        upload_url = blobstore.create_upload_url('/create-profile')
+        upload_url = blobstore.create_upload_url('/app/create-profile')
 
         template_values = {"upload_url": upload_url}
         template = jinja2_env.get_template('html/create-profile.html')
@@ -385,7 +543,7 @@ class CreateProfileHandler(Handler, blobstore_handlers.BlobstoreUploadHandler):
                                 email = userEmail, bio = userBio, numSlogans = 0)
             u.put()
 
-            self.redirect("/listing/new")
+            self.redirect("/app/listing/new")
 
         else:
             error = "That username already exists!  Please pick a different one."
@@ -414,7 +572,7 @@ class DeleteSloganHandler(Handler):
             if str(pRow.key.id()) == poemToDeleteID:
                 pRow.key.delete() #remove the 'poem' entity
 
-        self.redirect("/my-profile")'''
+        self.redirect("/app/my-profile")'''
 
 class DeleteCommentHandler(Handler):
     def post(self):
@@ -426,18 +584,55 @@ class UpVoteHandler(Handler):
         logging.info(self.request.body)
         data = json.loads(self.request.body)
         slogan = models.slogan.get_by_id(int(data['sloganKey']))
-        slogan.numLikes += 1
-        slogan.globalRank += likePoints
-        slogan.put()
+
+        votedSloganIDs = models.vote.gql('WHERE uniqueSloganID = :1', slogan.key.id()).fetch()
+        hasUserVoted = False
+        currentUser = users.get_current_user().user_id()
+        for vs in votedSloganIDs:
+            if vs.uniqueVoterID == currentUser:
+                hasUserVoted = True
+
+        if not hasUserVoted:
+            slogan.numLikes += 1
+            slogan.globalRank += likePoints
+            slogan.put()
+            vote = models.vote(uniqueVoterID = str(currentUser), uniqueSloganID = slogan.key.id())
+            vote.put()
 
 class DownVoteHandler(Handler):
     def post(self):
         logging.info(self.request.body)
         data = json.loads(self.request.body)
         slogan = models.slogan.get_by_id(int(data['sloganKey']))
-        slogan.numDislikes += 1
-        slogan.globalRank += dislikePoints
-        slogan.put()
+
+        votedSloganIDs = models.vote.gql('WHERE uniqueSloganID = :1', slogan.key.id()).fetch()
+        hasUserVoted = False
+        currentUser = users.get_current_user().user_id()
+        for vs in votedSloganIDs:
+            if vs.uniqueVoterID == currentUser:
+                hasUserVoted = True
+
+        if not hasUserVoted:
+            slogan.numDislikes += 1
+            slogan.globalRank += dislikePoints
+            slogan.put()
+            vote = models.vote(uniqueVoterID = str(currentUser), uniqueSloganID = slogan.key.id())
+            vote.put()
+
+
+class CheckProfileHandler(Handler):
+    def get(self):
+        hasProfile = False
+        if users.get_current_user():
+            currentUser = users.get_current_user().user_id()
+            userRows = models.user.gql('')
+            for uRow in userRows:
+                if uRow.uniqueGivenID == currentUser:
+                    hasProfile = True
+
+        template_values = {"hasProfile": hasProfile}
+        template = jinja2_env.get_template('html/check-profile.html')
+        self.response.out.write(template.render(template_values))
 
 
 def handle_404(request, response, exception):
@@ -455,29 +650,33 @@ def handle_500(request, response, exception):
 
 
 application = webapp2.WSGIApplication([
-    ("/upvote/", UpVoteHandler),
-    ("/downvote/", DownVoteHandler),
-    ("/listing/new", HomeListingNewHandler),
-    ("/listing/trending", HomeListingTrendingHandler),
-    ("/listing/top", HomeListingTopHandler),
-    ("/listing/(\w+)/new", SubpageListingNewHandler),
-    ("/listing/(\w+)/trending", SubpageListingTrendingHandler),
-    ("/listing/(\w+)/top", SubpageListingTopHandler),
-    ("/search", SearchHandler),
-    ("/user/(\d+)", ProfileHandler),
-    ("/user/(\d+)/slogans", ProfileSlogansHandler),
-    ("/user/(\d+)/top-slogans", ProfileTopSlogansHandler),
-    ("/user/(\d+)/comments", ProfileCommentsHandler),
-    ("/user/(\d+)/slogarama", SlogaramaHandler),
-    ("/my-profile", MyProfileHandler),
-    ("/my-profile/slogarama", MyProfileSlogaramaHandler),
-    ("/create-profile", CreateProfileHandler),
-    ("/slogan/(\d+)", SloganHandler),
-    ("/slogan/(\d+)/share", SloganHandler),
-    ("/slogan/(\d+)/comments", SloganCommentsHandler),
-    ("/addComment", SloganCommentsHandler),
-    ("/addSlogan", AddSloganHandler),
-    ("/deleteSlogan", DeleteSloganHandler),
+    ("/app/upvote/", UpVoteHandler),
+    ("/app/downvote/", DownVoteHandler),
+    ("/app/listing/new", HomeListingNewHandler),
+    ("/app/listing/trending", HomeListingTrendingHandler),
+    ("/app/listing/top", HomeListingTopHandler),
+    ("/app/listing/([\w\-]+)/new", SubpageListingNewHandler),
+    ("/app/listing/([\w\-]+)/trending", SubpageListingTrendingHandler),
+    ("/app/listing/([\w\-]+)/top", SubpageListingTopHandler),
+    ("/app/search", SearchHandler),
+    ("/app/user/(\d+)", ProfileHandler),
+    ("/app/user/(\d+)/edit", ProfileEditHandler),
+    ("/app/user/(\d+)/edit/(\d+)", ProfileEditHandler),
+    ("/app/user/(\d+)/slogans", ProfileSlogansHandler),
+    ("/app/user/(\d+)/top-slogans", ProfileTopSlogansHandler),
+    ("/app/user/(\d+)/comments", ProfileCommentsHandler),
+    ("/app/user/(\d+)/slogarama", SlogaramaHandler),
+    ("/app/my-profile", MyProfileHandler),
+    ("/app/my-profile/edit", MyProfileEditHandler),
+    ("/app/my-profile/slogarama", MyProfileSlogaramaHandler),
+    ("/app/create-profile", CreateProfileHandler),
+    ("/app/slogan/(\d+)", SloganHandler),
+    ("/app/slogan/(\d+)/share", SloganHandler),
+    ("/app/slogan/(\d+)/comments", SloganCommentsHandler),
+    ("/app/addComment", SloganCommentsHandler),
+    ("/app/addSlogan", AddSloganHandler),
+    ("/app/deleteSlogan", DeleteSloganHandler),
+    ("/app/checkProfile", CheckProfileHandler),
 ], debug=True)
 application.error_handlers[404] = handle_404
 #application.error_handlers[500] = handle_500

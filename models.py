@@ -25,7 +25,7 @@ class slogan(ndb.Model):
     numLikes = ndb.IntegerProperty()
     numDislikes = ndb.IntegerProperty()
     globalRank = ndb.IntegerProperty()
-    #temporalRank = ndb.IntegerProperty() This is computed in the handler as it's a per-user value, so not needed here.
+    temporalRank = ndb.IntegerProperty(default=0) #This is computed in the handler as it's a per-user value
     createdAt = ndb.DateTimeProperty(auto_now_add=True) #argument automatically sets createdAt to the current time.
 
 class comment(ndb.Model):
@@ -35,3 +35,7 @@ class comment(ndb.Model):
     text = ndb.TextProperty()
     parentCommentID = ndb.IntegerProperty() #this will hold a key.id() of another comment if it is a reply
     createdAt = ndb.DateTimeProperty(auto_now_add=True)
+
+class vote(ndb.Model):
+    uniqueVoterID = ndb.StringProperty(required=True) #uniqueGivenID
+    uniqueSloganID = ndb.IntegerProperty(required=True) #key.id()

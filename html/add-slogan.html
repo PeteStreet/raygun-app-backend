@@ -1,13 +1,58 @@
 {% extends "html/base.html" %}
 {% block head %} {% endblock %}
-{% block title %}Add Slogan Page{% endblock %}
+{% block title %} | Add Slogan{% endblock %}
 {% block pageContent %}
 
     <!-- The method must be "POST" and enctype must be set to "multipart/form-data". -->
 
-    <form action="/addSlogan" method="POST" enctype="multipart/form-data">
-      Slogan Text: <input name="slogan_text" required><br>
-      <input type="submit" name="submit" value="Add Slogan">
+    <form action="/app/addSlogan" method="POST" name="myForm" id="addSloganForm" onsubmit="return validateForm()" enctype="multipart/form-data">
+      <textarea id="slogan-add-field" maxlength="65" name="slogan_text" style="text-transform:uppercase" autofocus></textarea>
+      <p id="below-slogan-add-field">
+        <span id="charNum">65</span> <!-- character counter -->
+        <input type="submit" name="submit" value="Post Slogan" style="background-color:#ffffff; float:right; color:#2f5057; border:1px solid #2f5057;">
+      </p>
+
+      <p style="margin-bottom: 0px;"><strong>Tag your slogan with up to 2 subcategories.</strong></p>
+      <input class="single-check" type="checkbox" name="single-check" value="des-moines">Des Moines<br>
+      <input class="single-check" type="checkbox" name="single-check" value="iowa-city">Iowa City<br>
+      <input class="single-check" type="checkbox" name="single-check" value="kansas-city">Kansas City<br>
+      <input class="single-check" type="checkbox" name="single-check" value="milwaukee">Milwaukee<br>
+      <input class="single-check" type="checkbox" name="single-check" value="chicago">Chicago<br>
+      <input class="single-check" type="checkbox" name="single-check" value="cedar-rapids">Cedar Rapids<br>
+      <input class="single-check" type="checkbox" name="single-check" value="ames">Ames<br>
+      <input class="single-check" type="checkbox" name="single-check" value="omaha">Omaha<br>
+      <input class="single-check" type="checkbox" name="single-check" value="midwest">The Midwest<br>
+      <input class="single-check" type="checkbox" name="single-check" value="current-events">Politics/Current Events<br>
+      <input class="single-check" type="checkbox" name="single-check" value="misc">Everything Else<br>
     </form>
+
+    <p style="height: 1em; margin: 0px;"></p>
+    <div id="loadingDots" style="display:none; text-align:center; width: 100vw; height: 100vh;"><strong><span id="dots" style="font-size: 20vw; position: relative; top: 50%; transform: translateY(-50%);"></span></strong></div>
+
+<script>
+$('#addSloganForm').submit(function() {
+    var theSlogan = $.trim($('#slogan-add-field').val());
+    if (theSlogan != '') {
+        $('#addSloganForm').fadeOut('slow', function() {
+            $('#loadingDots').fadeIn();
+        });
+    }
+});
+var span = document.getElementById('dots');
+var interval = setInterval(function() {
+    if ((span.innerHTML += '.').length >= 4)
+        span.innerHTML = '';
+}, 350);
+
+
+function validateForm() {
+    var x = document.forms["myForm"]["slogan_text"].value;
+    if (x==null || x=="") {
+        var errorField = document.getElementById("slogan-add-field");
+        errorField.insertAdjacentHTML('afterend', '<strong>You need to type in a slogan.</strong><p></p>');
+        return false;
+    }
+}
+</script>
 
 {% endblock %}

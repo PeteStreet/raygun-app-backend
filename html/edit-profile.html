@@ -1,0 +1,54 @@
+{% extends "html/base.html" %}
+{% block head %} {% endblock %}
+{% block title %} | Edit Profile{% endblock %}
+{% block pageContent %}
+
+<div id="edit-profile-page">
+<h3 style="width:90%; padding-left:5%;">Edit your Profile</h3>
+<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+    <div id="form-insides">
+        <div id="edit-picture-field">
+            {% if uRow.pictureURL %}
+            <img src="{{uRow.pictureURL}}" class="profile-picture">
+            {% else %}
+            <img src="/img/stock-profile.PNG" class="profile-picture">
+            {% endif %}
+            <input type="button" value="Edit Picture" id="fakeBrowse" onclick="HandleBrowseClick();"
+                    style="width: 100%; background-color: #ffffff; color: #2f5057; border: 1px solid #2f5057;"/>
+            <p style="font-size: 65%;">*Note to Android 4.4 users, at this time you may not be able to upload your own profile picture.</p>
+            <input type="file" id="browse" name="pic" accept="image/*" style="opacity: 0; height: 0px;" onChange="Handlechange();">
+            <input type="text" id="filename" style="height: 0px; visibility: hidden;" readonly="true"/>
+        </div>
+
+        <div id="edit-text-fields">
+            Change your username: <input name="username" autofocus><br>
+            Change your personal slogan:<br><textarea id="slogan-add-field" maxlength="65" name="user_bio"></textarea><br>
+            <span id="charNum" style="margin-top:.2em;">65</span> <!-- character counter --><br>
+            <strong>{{error}}</strong>
+        </div>
+    </div>
+
+    <div id="submit-button">
+        <input type="submit" value="Done" style="background-color: #2f5057; color: #ffffff; border: 0px; height: 100%; font-size: 1.7em; width:100%;">
+    </div>
+
+</form>
+
+</div>
+
+<script>
+/* shoutout to Payam Shoeibi's answer for changing the upload button's text here:
+stackoverflow.com/questions/1163667/how-to-rename-html-browse-button-of-an-input-type-file */
+function HandleBrowseClick() {
+    var fileinput = document.getElementById("browse");
+    fileinput.click();
+}
+function Handlechange() {
+    var fileinput = document.getElementById("browse");
+    var textinput = document.getElementById("filename");
+    textinput.value = fileinput.value;
+}
+</script>
+
+{% endblock %}
+

@@ -2,28 +2,28 @@
 {% block head %}
     <link href="/css/main.css" rel="stylesheet" type="text/css">
 {% endblock %}
-{% block title %}Slogan Comments{% endblock %}
+{% block title %} | Slogan Comments{% endblock %}
 {% block pageContent %}
 
   <div class="comments-page">
 
-    <div class="add-comment" style="position: fixed; height: 70px; background-color: #ffffff;">
-        <form action="/addComment" method="POST">
-          <br><input name="comment_text" style="width: 55%;" placeholder="Write a comment" required>
-          <input name="slogan_id" value="{{ sRow.key.id() }}" readonly style="visibility: hidden; width: 0%;">
-             <span class="action-button comment-button">
-                 <input type="submit" value="Add Comment"
-                        style="width: 30%;background-color: #ffffff;color: #05084a;border: 1px solid #05084a;">
-             </span>
+    <div class="add-comment" style="position: fixed; width: 100%; padding-left: 2%; height: 6rem; background-color: #ffffff;">
+        <form action="/app/addComment" method="POST">
+          <br><input id="comment-add-field" name="comment_text" style="width: 95%; height: 1.5rem;" placeholder="Write a comment" maxlength="100" required>
+          <p id="below-comment-add-field"><span id="charNum">100</span> <!-- character counter -->
+          <span class="action-button comment-button">
+            <input type="submit" value="Add Comment"
+                   style="width: 30%; background-color: #ffffff;color: #2f5057; float:right; margin-right: 10%; border: 1px solid #2f5057;">
+          </span></p>
+          <input name="slogan_id" value="{{ sRow.key.id() }}" readonly style="visibility: hidden; width: 0%; height: 0px;">
         </form>
-        <hr>
     </div>
 
-    <div class="comment-feed" style="padding-top: 70px;">
+    <div class="comment-feed" style="padding-top: 6rem;">
         {% for comment in comments %}
             <div class="comment-row">
                 <div class="comment-author">
-                    <a href="/user/{{ comment.uniqueAuthorID }}"><strong>{{comment.userNickname}}</strong></a>
+                    <a href="/app/user/{{ comment.uniqueAuthorID }}"><strong>{{comment.userNickname}}</strong></a>
                 </div>
                 <div class="comment-text">
                     <p>{{comment.text}}</p>

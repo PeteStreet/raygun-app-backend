@@ -1,15 +1,52 @@
 {% extends "html/base.html" %}
 {% block head %} {% endblock %}
-{% block title %}Poem{% endblock %}
+{% block title %} | Create Profile{% endblock %}
 {% block pageContent %}
 
-<h3>Create a Profile</h3>
-<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
-  Username: <input name="username" required><br>
-  Email Address: <input name="email" required><br>
-  Bio:<br><textarea name="user_bio" rows="5" cols="60"></textarea><br>
-  <input type="file" name="pic" accept="image/*">
-  <input type="submit" value="Create User">
+<div id="create-profile-page">
+<img src="/img/createprofilebackground.png" style="width:100%;">
+<form action="{{upload_url}}" method="POST" name="myForm" onsubmit="return validateForm()" enctype="multipart/form-data">
+    <div id="form-insides">
+        <div id="create-edit-fields">
+            Username: <br><input name="username" id="add-field" autofocus><br>
+            <strong>{{error}}</strong><br>
+            Personal Slogan:<br><textarea id="slogan-add-field" name="user_bio" maxlength="65" rows="3" cols="60"></textarea><br>
+            <span id="charNum" style="margin-top:.2em;">65</span> <!-- character counter -->
+            <br><br>
+            <input type="button" value="Choose Profile Picture" id="fakeBrowse" onclick="HandleBrowseClick();"
+                    style="max-width: 55%; background-color: #ffffff; color: #2f5057; border: 1px solid #2f5057;"/>
+            <p style="font-size: 65%; margin-top: .2rem;">*Note to Android 4.4 users, at this time you may not be able to upload your own profile picture.</p>
+            <input type="file" id="browse" name="pic" accept="image/*" style="opacity: 0; height: 0px;" onChange="Handlechange();">
+            <input type="text" id="filename" style="height: 0px; visibility: hidden;" readonly="true"/>
+        </div>
+    </div>
+
+    <div id="submit-button" style="position: static">
+        <input type="submit" value="Create User" style="background-color: #2f5057; color: #ffffff; border: 0px; height: 100%; font-size: 1.5em; width:100%;">
+    </div>
 </form>
-<strong>{{error}}</strong>
+</div>
+
+<script>
+function validateForm() {
+    var x = document.forms["myForm"]["username"].value;
+    if (x==null || x=="") {
+        var errorField = document.getElementById("add-field");
+        errorField.insertAdjacentHTML('afterend', '<strong>You need to fill in your username.</strong>');
+        return false;
+    }
+}
+
+/* shoutout to Payam Shoeibi's answer for changing the upload button's text here:
+stackoverflow.com/questions/1163667/how-to-rename-html-browse-button-of-an-input-type-file */
+function HandleBrowseClick() {
+    var fileinput = document.getElementById("browse");
+    fileinput.click();
+}
+function Handlechange() {
+    var fileinput = document.getElementById("browse");
+    var textinput = document.getElementById("filename");
+    textinput.value = fileinput.value;
+}
+</script>
 {% endblock %}
