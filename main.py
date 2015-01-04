@@ -398,7 +398,7 @@ class SloganCommentsHandler(Handler):
             sloganAuthor.slogarma += commentPoints
             sloganAuthor.put()
 
-        time.sleep(.15) #This helps keep the eventual consistency at bay
+        time.sleep(.2) #This helps keep the eventual consistency at bay
 
         self.redirect("/app/slogan/" + uniqueSloganID + "/comments")
 

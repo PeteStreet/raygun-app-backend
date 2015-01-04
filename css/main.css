@@ -114,9 +114,9 @@ body {
     bottom: .5rem; }
 
 .profile-page .profile-top {
-  height: 25vh; }
+  height: 30vh; }
 .profile-page .profile-picture {
-  height: 85%;
+  height: 75%;
   width: auto;
   float: left;
   padding: 1.8%; }

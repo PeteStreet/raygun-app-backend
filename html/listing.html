@@ -9,11 +9,13 @@
     {% else %}
         {% for sRow in sloganRows %}
             <div class="slogan-row">
-                {% if userRows[loop.index0].pictureURL %}
-                <img src="{{userRows[loop.index0].pictureURL}}" class="profile-picture">
-                {% else %}
-                <img src="/img/stock-profile.PNG" class="profile-picture">
-                {% endif %}
+                <a href="/app/user/{{sRow.uniqueAuthorID}}">
+                    {% if userRows[loop.index0].pictureURL %}
+                    <img src="{{userRows[loop.index0].pictureURL}}" class="profile-picture">
+                    {% else %}
+                    <img src="/img/stock-profile.PNG" class="profile-picture">
+                    {% endif %}
+                </a>
                 <a href="/app/user/{{sRow.uniqueAuthorID}}" class="slogan-listing-link">
                     <p class="slogan-author">{{sRow.authorNickname}}</p>
                 </a>

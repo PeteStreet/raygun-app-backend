@@ -39,19 +39,22 @@ class Handler(webapp2.RequestHandler):
 
 class HomepageHandler(Handler):
     def get(self):
-        adsf = 2
+
+        template_values = {}
+        template = jinja2_env.get_template('site-html/check-profile.html')
+        self.response.out.write(template.render(template_values))
 
 
 def handle_404(request, response, exception):
     logging.exception(exception)
-    template = jinja2_env.get_template('html/404.html')
+    template = jinja2_env.get_template('site-html/404.html')
     response.write(template.render())
     response.set_status(404)
 
 
 def handle_500(request, response, exception):
     logging.exception(exception)
-    template = jinja2_env.get_template('html/500.html')
+    template = jinja2_env.get_template('site-html/500.html')
     response.write(template.render())
     response.set_status(500)
 
