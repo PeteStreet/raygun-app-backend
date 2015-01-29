@@ -637,8 +637,7 @@ class CheckProfileHandler(Handler):
 
 def handle_404(request, response, exception):
     logging.exception(exception)
-    template = jinja2_env.get_template('html/404.html')
-    response.write(template.render())
+
     response.set_status(404)
 
 

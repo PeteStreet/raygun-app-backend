@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="google-appengine-python" name="Google App Engine (Python)">
       <configuration>
-        <option name="rootFolder" value="C:\Users\Alex P\Documents\Sites\Slogun - Datastore - Clean Git" />
+        <option name="rootFolder" value="D:\Users\Alex P\Documents\Sites\Slogun - Datastore - Clean Git" />
         <option name="sdkFolder" value="C:\Program Files (x86)\Google\google_appengine" />
         <option name="templatesFolder" value="" />
         <option name="email" value="petestreet01@gmail.com" />
@@ -14,10 +14,9 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 2.7.8 (C:\Python27\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Google App Engine SDK" level="project" />
     <orderEntry type="library" name="sass-stdlib" level="application" />
   </component>
 </module>
-

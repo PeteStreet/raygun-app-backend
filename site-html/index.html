@@ -2,9 +2,93 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>Slogun</title>
+    <link href="/css/site-main.css" rel="stylesheet" type="text/css">
+
+    {% for sRow in sloganRows %}
+        <meta id="slogan{{loop.index0}}" data-other="^1000{% for sWord in sRow.text.split() %} {% if loop.index0 == sRow.highlightedWord %}<span class='highlighted-word'>{{sWord}}</span> {% else %}<span>{{sWord}}</span> {% endif %}{% endfor %}">
+    {% endfor %}
+
+    <!-- Site and app backend hand-built by
+         ______     __         ______     __  __
+        /\  __ \   /\ \       /\  ___\   /\ \\  \
+        \ \  __ \  \ \ \____  \ \  _\    \/_/\ \/_
+         \ \_\ \_\  \ \_____\  \ \_____\   / /\ \ \
+          \/_/\/_/   \/_____/   \/_____/   \/_/\/_/
+         ______   ______     ______   ______     ______     ______     ______     __   __
+        /\  == \ /\  ___\   /\__  _\ /\  ___\   /\  == \   /\  ___\   /\  __ \   /\ '-.\ \
+        \ \  _-/ \ \  _\    \/_/\ \/ \ \  _\    \ \  __<   \ \___  \  \ \ \_\ \  \ \ \-.  \
+         \ \_\    \ \_____\    \ \_\  \ \_____\  \ \_\ \_\  \/\_____\  \ \_____\  \ \_\\'\_\
+          \/_/     \/_____/     \/_/   \/_____/   \/_/ /_/   \/_____/   \/_____/   \/_/ \/_/
+      -->
+
 </head>
 <body>
 
+<div id="header">
+    <a href="http://www.slogunapp.com">
+        <img src="/img/slogun3.png">
+    </a>
+    <span>
+        A social app for those who love (and love to hate) the Midwest.
+    </span>
+</div>
+<div id="typetexts">
+    <div id="typedblock">
+        <span id="typedelement"></span>
+        <p style="color:#ffffff; float:right; font-size:75%; padding-top:.5em;">(top rated slogans)</p>
+    </div>
+</div>
+<div id="moreinfo">
+    <div>
+        <p>Slogun is the world's first social media platform built for the Midwest. Inspired from <a href="http://www.raygunsite.com" target="_blank">Raygun's</a> twisted sense of Midwest pride, Slogun gives you the opportunity to submit your quippy, snarky, and possibly true slogans about our great flyover states. Have something to say? Post away.</p>
+        <p>Questions Midwesterners are sick of hearing:</p>
+        <ul>
+            <li>“So wait, you live in the U.S.— L.A. or New York?”</li>
+            <li>“Oh Iowa, where all the potatoes are?”</li>
+            <li>“Do they have cities there?”</li>
+            <li>“Did you grow up on a farm?”</li>
+        </ul>
+        <p>Things people who use Slogun know:</p>
+        <ul>
+            <li>There’s a huge land mass in the middle of the U.S. that is neither L.A. nor New York.</li>
+            <li>Iowa = corn. Idaho = potatoes.</li>
+            <li>The Midwest claims Indianapolis, Detroit, Milwaukee, Kansas City, Omaha, Des Moines, Minneapolis, Cleveland, St. Louis. And Chicago, I guess.</li>
+            <li>A little over 50% of the Midwest is farmland, so the answer to that question is 50/50.</li>
+        </ul>
+        <p>Everyone in the community can view, vote, and comment on your slogan. Posting something popular could land you on the “Trending” or “All-Time” top pages. There are also numerous subcategories that focus on even more local communities - like cities, politics and current events.</p>
+        <p>Slogun is not just snappy sayings. It's a community of folks who are proud of their flyover states. Even if the rest of the world still thinks Iowa is where the potatoes are.</p>
+    </div>
+    <div style="text-align: center; padding-top: 2em;">
+        <a href="https://play.google.com/store/apps/details?id=edu.drake.slogun" target="_blank">
+          <img alt="Get it on Google Play"
+               src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
+        </a>
+    </div>
+</div>
+<div id="footer">
+    <div>
+        <p><a href="https://play.google.com/store/apps/details?id=edu.drake.slogun" target="_blank">App</a> built by <a href="https://github.com/aleeeciaax3/SLOGUN" target="_blank">Alex, Alecia, and Kanmani</a>.</p>
+        <p><a href="https://github.com/petestreet/raygun-app-backend" target="_blank">Site/backend</a> built by <a href="http://www.petestreetprod.com" target="_blank">Alex</a>.</p>
+        <p>Writing by <a href="http://lunaward.com/" target="_blank">Luna</a>.</p>
+        <p>App design by <a href="http://drake.edu/life/dosomethingdrake/nicolekasperbauer/" target="_blank">Nicole</a>.</p>
+    </div>
+    <div>
+        <p>Any questions?  Don't hesitate to <a href="http://www.petestreetprod.com/story/contact" target="_blank">get in touch</a>.</p>
+    </div>
+</div>
+
+<script src="/js/jquery-1.11.1.min.js"></script>
+<script src="/js/typed.js"></script>
+<script>
+    $(function(){
+        $("#typedelement").typed({
+            strings: [$('#slogan0').data('other'), $('#slogan1').data('other'), $('#slogan2').data('other'), $('#slogan3').data('other'), $('#slogan4').data('other')],
+            backDelay:2000,
+            loop:true,
+            cursorChar:""
+        });
+    });
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 application: slogunapp
-version: 13
+version: 16
 api_version: 1
 runtime: python27
 threadsafe: true
@@ -30,7 +30,7 @@ handlers:
   login: required
 
 - url: /*
-  script: site.application
+  script: frontsite.application
 
 libraries:
 - name: webapp2
